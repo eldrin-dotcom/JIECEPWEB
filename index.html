@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIECEP-PUPMC ECEntral</title>
+    <link rel="icon" href="images/jiecep logo.svg" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+    (function() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+        // Detect Facebook, Messenger, Instagram in-app browsers
+        const isInAppBrowser = /FBAN|FBAV|Instagram/.test(ua);
+
+        if (isInAppBrowser) {
+        // Inform the user and provide a clickable fallback link
+        document.body.innerHTML = `
+            <div style="font-family: sans-serif; text-align: center; padding: 2rem;">
+            <h2>This page works best in your main browser</h2>
+            <p>You're currently using an in-app browser (Messenger/Facebook/Instagram) which may cause issues.</p>
+            <a href="${window.location.href}" target="_blank" rel="noopener noreferrer"
+                style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #007bff; color: #fff; text-decoration: none; border-radius: 0.5rem;">
+                    Open in Browser
+            </a>
+            </div>
+        `;
+        }
+    })();
+    </script>
+
+    <style>
+
+       :root {
+            --primary-blue: oklch(70% 0.15 220);
+            --light-blue: oklch(90% 0.08 220);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to top, var(--primary-blue), var(--light-blue), white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 👇 Transparent Logo Layer — covers half screen or more */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 700px; /* Covers right side responsively */
+            height: 100vh;
+            background: url('images/JIECEP\ logo.png') no-repeat right center;
+            background-size: 700px auto; /* Maintain logo size */
+            background-repeat: no-repeat;
+            opacity: 0.12;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 👇 Glassmorphism container */
+        .auth-container {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-container h1 {
+            color: #2c3e50; /* Dark blue text */
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .toggle-link {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+        .message-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1050;
+            width: 90%;
+            max-width: 350px;
+        }
+
+        /* Password toggle button styling */
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-left: none;
+            cursor: pointer;
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+        .input-group > .form-control:focus + .input-group-text {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            z-index: 3; /* Ensure it stays above when focused */
+        }
+        .input-group .form-control {
+            border-right: none; /* Integrate with addon */
+        }
+        /* Mobile adjustments */
+        @media (max-width: 575.98px) {
+            .auth-container {
+                padding: 20px;
+                margin: 0 15px; /* Add some horizontal margin on very small screens */
+            }
+            h1.mb-3 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h1 id="authTitle" class="mb-3">Login</h1>
+        <div id="messageContainer" class="message-container"></div>
+
+        <div id="loginForm">
+            <input type="email" id="loginEmail" class="form-control mb-3" placeholder="Email" required autocomplete="email" />
+            <div class="input-group mb-2">
+                <input type="password" id="loginPassword" class="form-control" placeholder="Password" required autocomplete="current-password" />
+                <button class="btn btn-outline-secondary input-group-text" type="button" id="toggleLoginPassword" aria-label="Toggle login password visibility">
+                    <i class="fas fa-eye-slash"></i>
+                </button>
+            </div>
+            <a href="#" id="forgotPasswordLink" class="d-block text-end mb-4 toggle-link">Forgot Password?</a>
+            <button id="loginBtn" class="btn btn-primary w-100 mb-3">Login</button>
+            <p>Don't have an account? <a href="#" id="showSignup" class="toggle-link">Sign Up</a></p>
+        </div>
+
+        <div id="signupForm" style="display: none;">
+            <input type="email" id="signupEmail" class="form-control mb-3" placeholder="Email" required autocomplete="email" />
+            <div class="input-group mb-3">
+                <input type="password" id="signupPassword" class="form-control" placeholder="Password" required autocomplete="new-password" />
+                <button class="btn btn-outline-secondary input-group-text" type="button" id="toggleSignupPassword" aria-label="Toggle signup password visibility">
+                    <i class="fas fa-eye-slash"></i>
+                </button>
+            </div>
+            <div class="input-group mb-4">
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required autocomplete="new-password" />
+                <button class="btn btn-outline-secondary input-group-text" type="button" id="toggleConfirmPassword" aria-label="Toggle confirm password visibility">
+                    <i class="fas fa-eye-slash"></i>
+                </button>
+            </div>
+            <button id="signupBtn" class="btn btn-primary w-100 mb-3">Sign Up</button>
+            <p>Already have an account? <a href="#" id="showLogin" class="toggle-link">Login</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        // Changed import paths to be relative from the current directory (e.g., ./js/auth.js)
+        import { signInUser, signUpUser } from "./src/auth.js";
+        import { auth } from "./src/firebase-init.js";
+        import { onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // DOM Elements
+        const authTitle = document.getElementById("authTitle");
+        const loginForm = document.getElementById("loginForm");
+        const signupForm = document.getElementById("signupForm");
+        const loginEmailInput = document.getElementById("loginEmail");
+        const loginPasswordInput = document.getElementById("loginPassword");
+        const signupEmailInput = document.getElementById("signupEmail");
+        const signupPasswordInput = document.getElementById("signupPassword");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const loginBtn = document.getElementById("loginBtn");
+        const signupBtn = document.getElementById("signupBtn");
+        const showSignupLink = document.getElementById("showSignup");
+        const showLoginLink = document.getElementById("showLogin");
+        const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+        const messageContainer = document.getElementById("messageContainer");
+
+        // Password toggle buttons
+        const toggleLoginPasswordBtn = document.getElementById('toggleLoginPassword');
+        const toggleSignupPasswordBtn = document.getElementById('toggleSignupPassword');
+        const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
+
+
+        // Function to display messages to the user
+        function showMessage(message, type = 'danger') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            messageContainer.innerHTML = ''; // Clear previous messages
+            messageContainer.appendChild(alertDiv);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                // Ensure bootstrap object is available before trying to use it
+                if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                    const bootstrapAlert = bootstrap.Alert.getInstance(alertDiv);
+                    if (bootstrapAlert) {
+                        bootstrapAlert.dispose();
+                    } else {
+                        // Fallback if getInstance doesn't return an instance (e.g., if it was already dismissed manually)
+                        alertDiv.remove();
+                    }
+                } else {
+                    // Fallback if Bootstrap JS is not fully loaded or 'bootstrap' is undefined
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Function to toggle password visibility
+        function togglePasswordVisibility(passwordInput, toggleButton) {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleButton.querySelector('i').classList.remove('fa-eye-slash');
+                toggleButton.querySelector('i').classList.add('fa-eye');
+            } else {
+                passwordInput.type = "password";
+                toggleButton.querySelector('i').classList.remove('fa-eye');
+                toggleButton.querySelector('i').classList.add('fa-eye-slash');
+            }
+        }
+
+        // Attach toggle functionality to buttons
+        if (toggleLoginPasswordBtn && loginPasswordInput) {
+            toggleLoginPasswordBtn.addEventListener('click', () => {
+                togglePasswordVisibility(loginPasswordInput, toggleLoginPasswordBtn);
+            });
+        } 
+        if (toggleSignupPasswordBtn && signupPasswordInput) {
+            toggleSignupPasswordBtn.addEventListener('click', () => {
+                togglePasswordVisibility(signupPasswordInput, toggleSignupPasswordBtn);
+            });
+        } 
+        if (toggleConfirmPasswordBtn && confirmPasswordInput) {
+            toggleConfirmPasswordBtn.addEventListener('click', () => {
+                togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordBtn);
+            });
+        } 
+
+        // Function to clear form inputs and reset password visibility
+        function clearFormInputsAndResetVisibility() {
+            loginEmailInput.value = '';
+            loginPasswordInput.value = '';
+            signupEmailInput.value = '';
+            signupPasswordInput.value = '';
+            confirmPasswordInput.value = '';
+
+            // Ensure all password fields are reset to type 'password' and eye-slash icon
+            if (loginPasswordInput && toggleLoginPasswordBtn) { 
+                loginPasswordInput.type = "password";
+                toggleLoginPasswordBtn.querySelector('i').classList.remove('fa-eye');
+                toggleLoginPasswordBtn.querySelector('i').classList.add('fa-eye-slash');
+            }
+
+            if (signupPasswordInput && toggleSignupPasswordBtn) {
+                signupPasswordInput.type = "password";
+                toggleSignupPasswordBtn.querySelector('i').classList.remove('fa-eye');
+                toggleSignupPasswordBtn.querySelector('i').classList.add('fa-eye-slash');
+            }
+
+            if (confirmPasswordInput && toggleConfirmPasswordBtn) {
+                confirmPasswordInput.type = "password";
+                toggleConfirmPasswordBtn.querySelector('i').classList.remove('fa-eye');
+                toggleConfirmPasswordBtn.querySelector('i').classList.add('fa-eye-slash');
+            }
+        }
+
+
+        // Toggle between login and signup forms
+        showSignupLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            authTitle.textContent = "Sign Up";
+            loginForm.style.display = "none";
+            signupForm.style.display = "block";
+            messageContainer.innerHTML = ''; // Clear messages when switching form
+            clearFormInputsAndResetVisibility(); // Clear inputs and reset visibility
+        });
+
+        showLoginLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            authTitle.textContent = "Login";
+            signupForm.style.display = "none";
+            loginForm.style.display = "block";
+            messageContainer.innerHTML = ''; // Clear messages when switching form
+            clearFormInputsAndResetVisibility(); // Clear inputs and reset visibility
+        });
+
+        // Login button event listener
+        loginBtn.addEventListener("click", async () => {
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+
+            if (!email || !password) {
+                showMessage("Please enter both email and password.", "danger");
+                return;
+            }
+
+            try {
+                await signInUser(email, password);
+                // Redirect to dashboard on successful login, now correctly pointing to the portal folder
+                window.location.href = "./portal/dashboard.html"; 
+            } catch (error) {
+                let errorMessage = "Login failed. Please try again.";
+                if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address.";
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = "Incorrect password.";
+                } else if (error.code === 'auth/user-not-found') {
+                    errorMessage = "No account found with this email.";
+                } else if (error.code === 'auth/invalid-credential') {
+                    // Firebase sometimes uses 'invalid-credential' for wrong password/user not found combos
+                    errorMessage = "Invalid email or password."; 
+                }
+                showMessage(errorMessage, "danger");
+            }
+        });
+
+        // Signup button event listener
+        signupBtn.addEventListener("click", async () => {
+            const email = signupEmailInput.value.trim();
+            const password = signupPasswordInput.value.trim();
+            const confirmPassword = confirmPasswordInput.value.trim();
+
+            if (!email || !password || !confirmPassword) {
+                showMessage("Please fill in all fields.", "danger");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage("Passwords do not match.", "danger");
+                return;
+            }
+
+            try {
+                await signUpUser(email, password);
+                showMessage("Account created successfully! Please login.", "success");
+                // Optionally switch back to login form after successful signup
+                showLoginLink.click(); 
+            } catch (error) {
+                let errorMessage = "Sign up failed. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already in use.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "Password should be at least 6 characters.";
+                }
+                showMessage(errorMessage, "danger");
+            }
+        });
+
+        // Forgot Password link event listener
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = loginEmailInput.value.trim(); // Use the email from the login form
+
+                if (!email) {
+                    showMessage("Please enter your registered email in the Email field to reset your password.", "warning");
+                    return;
+                }
+
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    showMessage("Password reset email sent! Check your inbox.", "success");
+                } catch (error) {
+                    console.error("Password reset error:", error);
+                    let errorMessage = "Failed to send password reset email. Please try again.";
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = "No account found with that email address.";
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = "Please enter a valid email address.";
+                    }
+                    showMessage(errorMessage, "danger");
+                }
+            });
+        } 
+
+        // Optional: Check auth state on load (e.g., if user is already logged in)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User is already logged in:", user.uid);
+                // If user is already authenticated, redirect to dashboard
+                // This prevents users who are already logged in from seeing the login page
+                window.location.href = "./portal/dashboard.html"; 
+            } else {
+                console.log("No user logged in.");
+            }
+        });
+    </script>
+</body>
+</html>

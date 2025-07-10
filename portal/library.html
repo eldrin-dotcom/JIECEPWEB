@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECEntral - Library</title>
+    <link rel="icon" href="../images/jiecep logo.svg" type="image/svg+xml">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/library.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <!-- Desktop Navigation Bar (Reused from Dashboard) -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3 top-navbar-desktop">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fw-bold" style="color: var(--primary-blue);">ECentral</span>
+            </a>
+            <div class="collapse navbar-collapse justify-content-end d-none d-lg-block" id="navbarNav">
+                <ul class="navbar-nav" id="desktop-nav-links">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="dashboard.html" data-page="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="library.html" data-page="library">Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="explore.html" data-page="explore">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="signOutNavBtn" class="nav-link" href="#" data-page="signout">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<!-- Bottom Navigation Bar for Mobile/Tablet (Reused) -->
+    <nav class="bottom-navbar d-flex justify-content-around align-items-center py-2 d-lg-none">
+        <a class="nav-link" href="dashboard.html">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a class="nav-link active-mobile" href="library.html">
+            <i class="fas fa-book"></i>
+            <span>Library</span>
+        </a>
+        <a class="nav-link" href="explore.html">
+            <i class="fas fa-compass"></i>
+            <span>Explore</span>
+        </a>
+        <button class="nav-link" id="signOutMobileBtn" style="background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: inherit; font-size: 0.75rem;">
+            <i class="fas fa-sign-out-alt" style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+            <span>Sign Out</span>
+        </button>
+    </nav>
+    <main class="container-fluid py-4 px-3 px-md-4 px-lg-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4 card-title">Library</h1>
+            </div>
+
+            <!-- Search Feature Card -->
+            <div class="col-12 mb-4">
+                <div class="card p-4 search-bar">
+                    <h5 class="card-title mb-3">Search Library</h5>
+                    <form class="row g-3 align-items-center">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="searchInput" class="visually-hidden">Search Title, Author, Category</label>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Title, Author, or Category">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="searchCategory" class="visually-hidden">Category</label>
+                            <select class="form-select" id="searchCategory">
+                                <option value="">All Categories</option>
+                                <option value="Math">Math</option>
+                                <option value="GEAS">GEAS</option>
+                                <option value="ESAT">ESAT</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Files">Files</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-auto">
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Library Content - Tabs for Categories -->
+            <div class="col-12">
+                <div class="card p-4">
+                    <ul class="nav nav-tabs" id="libraryTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="math-tab" data-bs-toggle="tab" data-bs-target="#math" type="button" role="tab" aria-controls="math" aria-selected="true">Math</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="geas-tab" data-bs-toggle="tab" data-bs-target="#geas" type="button" role="tab" aria-controls="geas" aria-selected="false">GEAS</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="esat-tab" data-bs-toggle="tab" data-bs-target="#esat" type="button" role="tab" aria-controls="esat" aria-selected="false">ESAT</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="electronics-tab" data-bs-toggle="tab" data-bs-target="#electronics" type="button" role="tab" aria-controls="electronics" aria-selected="false">Electronics</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab" aria-controls="files" aria-selected="false">Files</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="libraryTabContent">
+                        <!-- Math Tab Content -->
+                        <div class="tab-pane fade show active" id="math" role="tabpanel" aria-labelledby="math-tab">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-2">
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=MATH" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">Calculus Simplified</p>
+                                            <p class="book-author">By John Doe</p>
+                                            <p class="book-category">Category: Math</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=ALG" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">Advanced Algebra</p>
+                                            <p class="book-author">By Jane Smith</p>
+                                            <p class="book-category">Category: Math</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=GEO" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">Geometry Fundamentals</p>
+                                            <p class="book-author">By Alex Johnson</p>
+                                            <p class="book-category">Category: Math</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GEAS Tab Content -->
+                        <div class="tab-pane fade" id="geas" role="tabpanel" aria-labelledby="geas-tab">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-2">
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=GEAS1" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">GEAS Reviewer Vol. 1</p>
+                                            <p class="book-author">By Team ECentral</p>
+                                            <p class="book-category">Category: GEAS</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=GEAS2" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">General Engineering Aptitude</p>
+                                            <p class="book-author">By P. Cruz</p>
+                                            <p class="book-category">Category: GEAS</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ESAT Tab Content -->
+                        <div class="tab-pane fade" id="esat" role="tabpanel" aria-labelledby="esat-tab">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-2">
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=ESAT" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">ESAT Principles</p>
+                                            <p class="book-author">By M. Reyes</p>
+                                            <p class="book-category">Category: ESAT</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Electronics Tab Content -->
+                        <div class="tab-pane fade" id="electronics" role="tabpanel" aria-labelledby="electronics-tab">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-2">
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=ELEC" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">Digital Electronics</p>
+                                            <p class="book-author">By L. Garcia</p>
+                                            <p class="book-category">Category: Electronics</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="book-card">
+                                        <div class="book-thumbnail">
+                                            <img src="https://placehold.co/80x100/e8f0fe/007bff?text=CIR" alt="Book Cover">
+                                        </div>
+                                        <div class="book-details">
+                                            <p class="book-title">Circuit Analysis</p>
+                                            <p class="book-author">By S. Lee</p>
+                                            <p class="book-category">Category: Electronics</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Files Tab Content -->
+                        <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
+                            <h5 class="card-title mt-3 mb-3">File Folders</h5>
+
+                            <!-- Dropdown for mobile screens (d-lg-none: hidden on large screens and up) -->
+                            <div class="folder-dropdown d-lg-none mb-3">
+                                <button class="btn dropdown-toggle" type="button" id="folderDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select Folder
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="folderDropdownMenuButton" id="mobileFolderDropdown">
+                                    <li><a class="dropdown-item" href="#" data-folder="general">General Files</a></li>
+                                    <li><a class="dropdown-item" href="#" data-folder="first-year">First Year</a></li>
+                                    <li><a class="dropdown-item" href="#" data-folder="second-year">Second Year</a></li>
+                                    <li><a class="dropdown-item" href="#" data-folder="third-year">Third Year</a></li>
+                                    <li><a class="dropdown-item" href="#" data-folder="fourth-year">Fourth Year</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Grid for desktop screens (d-none: hidden by default, d-lg-grid: grid on large screens and up) -->
+                            <div class="file-folder-grid d-none d-lg-grid">
+                                <div class="folder-card" data-folder="general">
+                                    <i class="fas fa-folder"></i>
+                                    <p class="folder-title">General Files</p>
+                                </div>
+                                <div class="folder-card" data-folder="first-year">
+                                    <i class="fas fa-folder"></i>
+                                    <p class="folder-title">First Year</p>
+                                </div>
+                                <div class="folder-card" data-folder="second-year">
+                                    <i class="fas fa-folder"></i>
+                                    <p class="folder-title">Second Year</p>
+                                </div>
+                                <div class="folder-card" data-folder="third-year">
+                                    <i class="fas fa-folder"></i>
+                                    <p class="folder-title">Third Year</p>
+                                </div>
+                                <div class="folder-card" data-folder="fourth-year">
+                                    <i class="fas fa-folder"></i>
+                                    <p class="folder-title">Fourth Year</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4" id="folderContentDisplay">
+                                <!-- Content for selected folder will be loaded here dynamically -->
+                                <h6 id="currentFolderTitle" class="mb-3">Select a folder to view its contents.</h6>
+                                <div id="folderItems" class="row row-cols-1 g-3">
+                                    <!-- Dynamic content based on selected folder -->
+                                    <div class="col no-results">No files found in this folder.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../src/library.js"></script>
+    <script type="module">
+        // Adjusted import paths because dashboard.html is inside the 'portal' folder
+        // The path now correctly goes up one level (..) to find the js folder.
+        import { signOutUser } from "../js/auth.js";
+        import { auth } from "../js/firebase-init.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+
+        // DOM Elements for sign-out buttons
+        const signOutNavBtn = document.getElementById("signOutNavBtn");
+        const signOutMobileBtn = document.getElementById("signOutMobileBtn");
+
+        // Function to handle sign out
+        async function handleSignOut(e) {
+            e.preventDefault();
+            console.log("Sign out button clicked!"); // Debugging log
+            try {
+                await signOutUser(); // signOutUser handles redirection to index.html
+            } catch (error) {
+                console.error("Sign out failed:", error);
+                // Optionally display an error message to the user
+            }
+        }
+
+        // Attach event listeners to sign-out buttons
+        if (signOutNavBtn) {
+            signOutNavBtn.addEventListener("click", handleSignOut);
+        }
+        if (signOutMobileBtn) {
+            signOutMobileBtn.addEventListener("click", handleSignOut);
+        }
+
+        // Listen for authentication state changes to update UI or protect routes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, update welcome message
+                console.log("User logged in:", user.email || user.uid);
+                // the user *should* be logged in. If not, redirect.
+            } else {
+                // User is signed out, redirect to login page
+                console.log("No user logged in. Redirecting to index.html");
+                window.location.href = "../index.html"; // Redirect to the main login page
+            }
+        });
+    </script>
+</body>
+</html>

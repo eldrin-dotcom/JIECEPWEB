@@ -1,0 +1,494 @@
+
+:root {
+    --primary-blue: #007bff; /* A standard blue, adjust if needed */
+    --light-blue: #e8f0fe;
+    --dark-blue-text: #2c3e50; /* For headings and important text */
+    --medium-gray: #6c757d; /* For secondary text */
+    --light-gray: #f8f9fa; /* For card backgrounds or subtle borders */
+    --border-color: #dee2e6;
+    --card-shadow: rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-blue-text);
+    padding-top: 70px;
+}
+
+/* Custom Navbar Styling */
+.navbar-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030; /* ensures it stays above other content */
+    background-color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+    backdrop-filter: blur(10px); /* subtle blur for glass-like effect */
+    box-shadow: 0 2px 4px var(--card-shadow);
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+
+.navbar-brand img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--dark-blue-text);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem; /* For hover effect */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+/* Active link styling for desktop - only changes text color as per design */
+.navbar-nav .nav-link.active {
+    color: var(--primary-blue);
+}
+
+/* Bottom Navbar for Mobile/Tablet */
+.bottom-navbar {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+    backdrop-filter: blur(10px); /* blur effect for transparency */
+    box-shadow: 0 -2px 4px var(--card-shadow); /* shadow on top edge */
+    z-index: 1000;
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+
+.bottom-navbar .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    color: var(--medium-gray);
+    font-size: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.bottom-navbar .nav-link i {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.bottom-navbar .nav-link:hover {
+    color: var(--primary-blue);
+}
+
+
+/* Main content padding for bottom navbar */
+@media (max-width: 991.98px) {
+    body {
+        padding-bottom: 70px; /* Space for the fixed bottom navbar */
+    }
+    /* The top-navbar-desktop is now always visible, but its contents are hidden below lg */
+    .bottom-navbar {
+        display: flex; /* Show bottom nav on small screens */
+    }
+    .navbar-expand-lg .navbar-collapse {
+        display: none !important; /* Hide desktop nav items on small screens */
+    }
+}
+
+
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.6); /* semi-transparent white */
+    backdrop-filter: blur(10px);          /* blur for glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* Safari support */
+    box-shadow: 0 4px 12px var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+.card-title {
+    color: var(--dark-blue-text);
+    font-weight: 600;
+}
+
+/* Welcome Card Specifics */
+.welcome-card {
+    background: linear-gradient(135deg, #4A90E2, #7B68EE); /* Keep original gradient */
+    color: #fff;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+
+    /* Glassmorphism Effects */
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow for depth */
+    backdrop-filter: blur(8px); /* Glass blur */
+    -webkit-backdrop-filter: blur(8px); /* Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Light glass border */
+}
+
+
+.welcome-card .welcome-text h2 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-card .progress-info {
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-card .progress-bar-custom {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    height: 8px;
+    width: 100%;
+}
+
+.welcome-card .progress-fill {
+    background-color: #fff;
+    border-radius: 10px;
+    height: 100%;
+    width: 0%; /* Initial width */
+    transition: width 1s ease-in-out;
+}
+
+
+.welcome-card .actions .btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    font-weight: 500;
+    margin-right: 1rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.welcome-card .actions .btn:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-color: #fff;
+}
+
+
+
+.welcome-card .illustration {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-size: 8rem;
+    color: rgba(255, 255, 255, 0.1);
+    transform: rotate(-15deg);
+}
+
+/* Announcement and Event Items */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.announcement-title, .event-title, .task-text {
+    font-weight: 500;
+    color: var(--dark-blue-text);
+}
+
+.announcement-date, .event-date-time, .task-date {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+}
+
+.btn-view-all {
+    color: var(--primary-blue);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.btn-view-all:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+/* Tasks Section */
+.task-item {
+    padding: 0.75rem 0;
+    display: flex;
+    align-items: center;
+}
+.task-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.task-checkbox {
+    margin-right: 1rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent checkbox from shrinking */
+}
+
+.task-checkbox i {
+    color: #fff;
+    font-size: 0.8rem;
+    display: none; /* Hidden by default */
+}
+
+.task-checkbox.checked {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.task-checkbox.checked i {
+    display: block; /* Show checkmark when checked */
+}
+
+.task-details {
+    flex-grow: 1;
+}
+
+.task-text.completed {
+    text-decoration: line-through;
+    color: var(--medium-gray);
+}
+
+.add-task-btn {
+    background-color: transparent;
+    border: 1px dashed var(--primary-blue);
+    color: var(--primary-blue);
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.add-task-btn:hover {
+    background-color: var(--primary-blue);
+    color: #fff;
+}
+
+/* Event Item Specifics */
+.event-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.event-date-box {
+    flex-shrink: 0;
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    font-weight: 600;
+    width: 50px;
+    height: 50px;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.event-date-box small {
+    font-size: 0.7rem;
+    margin-top: -3px;
+}
+
+.event-content {
+    flex-grow: 1;
+}
+
+.event-location {
+    font-size: 0.85rem;
+    color: var(--primary-blue); /* Changed from medium-gray based on design */
+}
+
+.btn-rsvp {
+    color: var(--primary-blue);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.btn-rsvp:hover {
+    color: #0056b3;
+}
+
+/* Suggestion Box */
+.suggestion-box textarea {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    resize: vertical;
+    min-height: 100px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.suggestion-box textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-submit-suggestion {
+    background-color: var(--primary-blue);
+    color: #fff;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit-suggestion:hover {
+    background-color: #0056b3;
+}
+
+/* Calendar Styling */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-header h5 {
+    margin-bottom: 0;
+    color: var(--dark-blue-text);
+    font-weight: 600;
+}
+
+.calendar-header .nav-arrows i {
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.calendar-header .nav-arrows i:hover {
+    color: var(--primary-blue);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.calendar-day-name {
+    font-weight: 600;
+    color: var(--medium-gray);
+    padding: 0.5rem 0;
+}
+
+.calendar-date {
+    padding: 0.75rem 0;
+    border-radius: 0.5rem;
+    background-color: var(--light-gray); /* Default background */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+    overflow: hidden; /* To contain event indicators */
+}
+
+.calendar-date:hover {
+    background-color: var(--border-color);
+}
+
+.calendar-date.current-month {
+    background-color: #fff;
+}
+
+.calendar-date.today {
+    background-color: var(--primary-blue);
+    color: #fff;
+    font-weight: 600;
+}
+.calendar-date.today:hover {
+    background-color: #0056b3;
+}
+
+.calendar-date.has-event {
+    border: 2px solid var(--primary-blue); /* Indicate events */
+    background-color: var(--light-blue);
+}
+
+.calendar-event-indicator {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary-blue);
+    border-radius: 50%;
+}
+
+.calendar-detail-card {
+    margin-top: 1.5rem;
+}
+
+.calendar-detail-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+}
+.calendar-detail-item:last-child {
+    border-bottom: none;
+}
+
+.calendar-detail-time {
+    flex-shrink: 0;
+    width: 60px;
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+.calendar-detail-content {
+    flex-grow: 1;
+}
+
+.calendar-detail-title {
+    font-weight: 500;
+    color: var(--dark-blue-text);
+    margin-bottom: 0.2rem;
+}
+
+.calendar-detail-location {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+}

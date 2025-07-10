@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECEntral - Explore</title>
+    <link rel="icon" href="../images/jiecep logo.svg" type="image/svg+xml">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/explore.css">
+</head>
+<body>
+    <!-- Desktop Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3 top-navbar-desktop">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fw-bold" style="color: var(--primary-blue);">ECentral</span>
+            </a>
+            <div class="collapse navbar-collapse justify-content-end d-none d-lg-block" id="navbarNav">
+                <ul class="navbar-nav" id="desktop-nav-links">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html" data-page="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="library.html" data-page="library">Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="explore.html" data-page="explore">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="signOutNavBtn" class="nav-link" href="#" data-page="signout">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+ <!-- Bottom Navigation Bar for Mobile/Tablet -->
+    <nav class="bottom-navbar d-flex justify-content-around align-items-center py-2 d-lg-none">
+        <a class="nav-link" href="dashboard.html">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a class="nav-link" href="library.html">
+            <i class="fas fa-book"></i>
+            <span>Library</span>
+        </a>
+        <a class="nav-link active-mobile" href="explore.html">
+            <i class="fas fa-compass"></i>
+            <span>Explore</span>
+        </a>
+        <button class="nav-link" id="signOutMobileBtn" style="background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: inherit; font-size: 0.75rem;">
+            <i class="fas fa-sign-out-alt" style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+            <span>Sign Out</span>
+        </button>
+    </nav>
+    <!-- Main Content Area -->
+    <main class="container-fluid py-4 px-3 px-md-4 px-lg-5">
+        <h1 class="mb-4 card-title">Explore ECentral</h1>
+        <p class="lead text-center mb-5 text-muted">
+            Dive deeper into the heart of JIECEP-PUPMC. Here you'll find information about our leadership, key initiatives, historical milestones, upcoming events, and ways to connect with our vibrant community.
+        </p>
+
+        <!-- Main Accordion Section -->
+        <div class="accordion" id="mainAccordion">
+            <!-- Project JIECEP Section -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProjectsJIECEP" aria-expanded="false" aria-controls="collapseProjectsJIECEP">
+                        Project JIECEP
+                    </button>
+                </h2>
+                <div id="collapseProjectsJIECEP" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <p class="mb-4">Project JIECEP embodies our core values and the mission we strive to achieve:</p>
+                        <div class="jiecep-acronym-container">
+                            <div class="jiecep-letter-card">
+                                <span class="letter">J</span>
+                                <div class="phrase-content">
+                                    <h6>Join Forces for Unity and Collaboration</h6>
+                                    <p>Because progress begins with partnership.</p>
+                                </div>
+                            </div>
+                            <div class="jiecep-letter-card">
+                                <span class="letter">I</span>
+                                <div class="phrase-content">
+                                    <h6>Innovate for Growth and Excellence</h6>
+                                    <p>Because growth thrives on new ideas.</p>
+                                </div>
+                            </div>
+                            <div class="jiecep-letter-card">
+                                <span class="letter">E</span>
+                                <div class="phrase-content">
+                                    <h6>Empower Future Leaders and Lifelong Learners</h6>
+                                    <p>Because the next leaders are among us.</p>
+                                </div>
+                            </div>
+                            <div class="jiecep-letter-card">
+                                <span class="letter">C</span>
+                                <div class="phrase-content">
+                                    <h6>Connect with Transparency and Purpose</h6>
+                                    <p>Because trust is built on openness.</p>
+                                </div>
+                            </div>
+                            <div class="jiecep-letter-card">
+                                <span class="letter">E</span>
+                                <div class="phrase-content">
+                                    <h6>Engage the ECE Community with Inclusivity</h6>
+                                    <p>Because everyones deserves to belong.</p>
+                                </div>
+                            </div>
+                            <div class="jiecep-letter-card">
+                                <span class="letter">P</span>
+                                <div class="phrase-content">
+                                    <h6>Progress Through Ethical and Sustainable Leadership</h6>
+                                    <p>Because excellence must be built to last.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTransparency" aria-expanded="false" aria-controls="collapseTransparency">
+                        Transparency
+                    </button>
+                </h2>
+                <div id="collapseTransparency" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <p class="mb-3">Access our annual transparency report to learn more about our operations, finances, and impact. We are committed to openness and accountability.</p>
+                        <a href="https://example.com/JIECEP_Transparency_Report.pdf" download="JIECEP_Transparency_Report.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                            <i class="fas fa-file-download me-2"></i> Download Report (PDF)
+                        </a>
+                        <small class="d-block mt-2 text-muted">Click the button above to download the latest transparency report.</small>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Officers Section -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOfficers" aria-expanded="false" aria-controls="collapseOfficers">
+                        Officers
+                    </button>
+                </h2>
+                <div id="collapseOfficers" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <p class="mb-3">Meet the dedicated officers of JIECEP-PUPMC who lead our initiatives and serve the student body.</p>
+                        <div class="officer-cards-container">
+                            <!-- Officer Card 1: President -->
+                            <div class="officer-card">
+                                <img src="https://placehold.co/100x100/007bff/ffffff?text=JD" alt="Officer Jane Doe">
+                                <h6>Jane Doe</h6>
+                                <p class="mb-1">President</p>
+                                <small class="text-muted">Leading the organization with vision and dedication.</small>
+                            </div>
+                            <!-- Officer Card 2: Vice President -->
+                            <div class="officer-card">
+                                <img src="https://placehold.co/100x100/007bff/ffffff?text=JS" alt="Officer John Smith">
+                                <h6>John Smith</h6>
+                                <p class="mb-1">Vice President</p>
+                                <small class="text-muted">Supporting the President and overseeing key operations.</small>
+                            </div>
+                            <!-- Officer Card 3: Secretary -->
+                            <div class="officer-card">
+                                <img src="https://placehold.co/100x100/007bff/ffffff?text=EW" alt="Officer Emily White">
+                                <h6>Emily White</h6>
+                                <p class="mb-1">Secretary</p>
+                                <small class="text-muted">Managing communications and administrative tasks.</small>
+                            </div>
+                            <!-- Officer Card 4: Treasurer -->
+                            <div class="officer-card">
+                                <img src="https://placehold.co/100x100/007bff/ffffff?text=RM" alt="Officer Robert Miller">
+                                <h6>Robert Miller</h6>
+                                <p class="mb-1">Treasurer</p>
+                                <small class="text-muted">Handling financial affairs and budget management.</small>
+                            </div>
+                             <!-- Officer Card 5: Auditor -->
+                            <div class="officer-card">
+                                <img src="https://placehold.co/100x100/007bff/ffffff?text=SM" alt="Officer Sarah Green">
+                                <h6>Sarah Green</h6>
+                                <p class="mb-1">Auditor</p>
+                                <small class="text-muted">Ensuring transparency and accountability in finances.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQs Section -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFAQs" aria-expanded="false" aria-controls="collapseFAQs">
+                        Frequently Asked Questions (FAQs)
+                    </button>
+                </h2>
+                <div id="collapseFAQs" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="accordion" id="faqsAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="false" aria-controls="faqOne">
+                                        How can I become a member of JIECEP-PUPMC?
+                                    </button>
+                                </h2>
+                                <div id="faqOne" class="accordion-collapse collapse" data-bs-parent="#faqsAccordion">
+                                    <div class="accordion-body">
+                                        Membership is open to all bona fide Electronics Engineering students of PUP Maragondon Campus. You can visit our office or attend our general assembly to learn more about the registration process.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
+                                        What kind of activities does JIECEP-PUPMC organize?
+                                    </button>
+                                </h4>
+                                <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#faqsAccordion">
+                                    <div class="accordion-body">
+                                        We organize a variety of activities including technical workshops, seminars, community outreach programs, sports events, and social gatherings to enhance both academic and personal development.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
+                                        How can I get involved in projects?
+                                    </button>
+                                </h2>
+                                <div id="faqThree" class="accordion-collapse collapse" data-bs-parent="#faqsAccordion">
+                                    <div class="accordion-body">
+                                        Keep an eye on our announcements and social media channels for project sign-up opportunities. You can also reach out to our Project Committee members for more details.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add more FAQs here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Achievements and History Section - Now Standalone -->
+        <section class="achievements-section">
+            <h2 class="section-title">Our Achievements & History</h2>
+            <p class="text-center mb-4 text-muted">Explore the proud history and significant milestones of JIECEP-PUPMC, showcasing our dedication and impact since establishment.</p>
+            <div class="achievements-grid">
+                <!-- Achievement Card 1 -->
+                <div class="achievement-card">
+                    <div class="icon-container"><i class="fas fa-trophy"></i></div>
+                    <h6>Founding of JIECEP-PUPMC</h6>
+                    <p class="year">2015</p>
+                    <p>Officially established as the premier organization for Electronics Engineering students on campus.</p>
+                </div>
+                <!-- Achievement Card 2 -->
+                <div class="achievement-card">
+                    <div class="icon-container"><i class="fas fa-flask"></i></div>
+                    <h6>First Inter-University Robotics Competition Win</h6>
+                    <p class="year">2017</p>
+                    <p>Our team secured 1st place in the annual national robotics challenge, showcasing innovative design.</p>
+                </div>
+                <!-- Achievement Card 3 -->
+                <div class="achievement-card">
+                    <div class="icon-container"><i class="fas fa-handshake"></i></div>
+                    <h6>Successful Industry Partnership Program</h6>
+                    <p class="year">2019</p>
+                    <p>Launched internship and mentorship programs with leading tech companies, benefiting over 100 students.</p>
+                </div>
+                <!-- Achievement Card 4 -->
+                <div class="achievement-card">
+                    <div class="icon-container"><i class="fas fa-globe-asia"></i></div>
+                    <h6>Pioneering Virtual Workshop Series</h6>
+                    <p class="year">2020</p>
+                    <p>Adapted to online learning by hosting a highly successful series of virtual technical workshops during the pandemic.</p>
+                </div>
+                <!-- Achievement Card 5 -->
+                <div class="achievement-card">
+                    <div class="icon-container"><i class="fas fa-certificate"></i></div>
+                    <h6>Accreditation by National IECEP Chapter</h6>
+                    <p class="year">2022</p>
+                    <p>Received official recognition and accreditation from the national Institute of Electronics Engineers of the Philippines.</p>
+                </div>
+                <!-- Achievement Card 6 -->
+                <div class="achievement-card">
+                    <div class="icon-container"><i class="fas fa-users-cog"></i></div>
+                    <h6>Establishment of Student Research Hub</h6>
+                    <p class="year">2023</p>
+                    <p>Created a dedicated hub to support student-led research projects and foster academic innovation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Media Accounts Section -->
+        <section class="social-media-section">
+            <h5>Connect With Us!</h5>
+            <div class="social-icons">
+                <a href="https://facebook.com/JIECEPPUPMC" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://twitter.com/JIECEPPUPMC" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com/JIECEPPUPMC" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://linkedin.com/company/JIECEPPUPMC" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <!-- Add more social media links as needed -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../src/explore.js"></script>
+    <script type="module">
+        // Adjusted import paths because dashboard.html is inside the 'portal' folder
+        // The path now correctly goes up one level (..) to find the js folder.
+        import { signOutUser } from "../js/auth.js";
+        import { auth } from "../js/firebase-init.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+
+        // DOM Elements for sign-out buttons
+        const signOutNavBtn = document.getElementById("signOutNavBtn");
+        const signOutMobileBtn = document.getElementById("signOutMobileBtn");
+
+        // Function to handle sign out
+        async function handleSignOut(e) {
+            e.preventDefault();
+            console.log("Sign out button clicked!"); // Debugging log
+            try {
+                await signOutUser(); // signOutUser handles redirection to index.html
+            } catch (error) {
+                console.error("Sign out failed:", error);
+                // Optionally display an error message to the user
+            }
+        }
+
+        // Attach event listeners to sign-out buttons
+        if (signOutNavBtn) {
+            signOutNavBtn.addEventListener("click", handleSignOut);
+        }
+        if (signOutMobileBtn) {
+            signOutMobileBtn.addEventListener("click", handleSignOut);
+        }
+
+        // Listen for authentication state changes to update UI or protect routes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, update welcome message
+                console.log("User logged in:", user.email || user.uid);
+                // the user *should* be logged in. If not, redirect.
+            } else {
+                // User is signed out, redirect to login page
+                console.log("No user logged in. Redirecting to index.html");
+                window.location.href = "../index.html"; // Redirect to the main login page
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+/* Reusing global variables from dashboard for consistent branding */
+:root {
+    --primary-blue: #007bff;
+    --light-blue: #e8f0fe;
+    --dark-blue-text: #2c3e50;
+    --medium-gray: #6c757d;
+    --light-gray: #f8f9fa;
+    --border-color: #dee2e6;
+    --card-shadow: rgba(0, 0, 0, 0.05);
+    --gradient-start: #4A90E2; /* From welcome card gradient */
+    --gradient-end: #7B68EE;   /* From welcome card gradient */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-blue-text);
+    min-height: 100vh; /* Ensure footer stays at bottom */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom Navbar Styling (reused) */
+.navbar-custom {
+    background-color: #fff;
+    box-shadow: 0 2px 4px var(--card-shadow);
+}
+
+.navbar-brand img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--dark-blue-text);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--primary-blue);
+}
+
+/* Main content area styling */
+main.container-fluid {
+    flex-grow: 1; /* Allow content to grow and push footer down */
+    padding-bottom: 20px; /* Default desktop padding */
+}
+
+/* Bottom Navbar for Mobile/Tablet (reused) */
+.bottom-navbar {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -2px 4px var(--card-shadow);
+    z-index: 1000;
+    text-align: center;
+}
+
+.bottom-navbar .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    color: var(--medium-gray);
+    font-size: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.bottom-navbar .nav-link i {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.bottom-navbar .nav-link:hover,
+.bottom-navbar .nav-link.active-mobile {
+    color: var(--primary-blue);
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 991.98px) {
+    body {
+        padding-bottom: 70px; /* Space for the fixed bottom navbar */
+    }
+    .bottom-navbar {
+        display: flex; /* Show bottom nav on small screens */
+    }
+    .navbar-expand-lg .navbar-collapse {
+        display: none !important; /* Hide desktop nav items on small screens */
+    }
+    main.container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1rem; /* Adjust top padding for mobile */
+        padding-bottom: 1rem; /* Adjust bottom padding for mobile before footer/bottom nav */
+    }
+    h1.card-title {
+        font-size: 1.75rem; /* Smaller title on mobile */
+        text-align: center;
+    }
+    .lead.text-center {
+        font-size: 0.95rem; /* Smaller lead text on mobile */
+        margin-bottom: 2rem !important; /* Reduce spacing slightly */
+    }
+    .accordion-button {
+        padding: 0.8rem 1.2rem; /* Slightly smaller padding for accordion buttons */
+        font-size: 0.95rem;
+    }
+    .accordion-body {
+        padding: 1rem; /* Reduce padding inside accordion bodies */
+    }
+    .jiecep-letter-card .letter {
+        font-size: 2rem; /* Smaller letter size */
+        width: 40px; /* Smaller width for letter container */
+    }
+    .jiecep-letter-card .phrase-content h6 {
+        font-size: 0.9rem;
+    }
+    .jiecep-letter-card .phrase-content p {
+        font-size: 0.8rem;
+    }
+
+    /* Achievements Grid for smaller screens */
+    .achievements-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 1rem; /* Reduced gap */
+    }
+    .achievement-card {
+        padding: 1rem; /* Smaller padding */
+    }
+    .achievement-card .icon-container {
+        font-size: 2rem; /* Smaller icon size */
+    }
+    .achievement-card h6 {
+        font-size: 1.1rem;
+    }
+    .achievement-card .year {
+        font-size: 0.8rem;
+    }
+    .achievement-card p {
+        font-size: 0.8rem;
+    }
+
+    /* Officer cards container for smaller screens */
+    .officer-cards-container {
+        gap: 1rem; /* Reduced gap between officer cards */
+        padding-left: 0.5rem; /* Adjust padding for better look on mobile */
+        padding-right: 0.5rem;
+    }
+    .officer-card {
+        width: 220px; /* Slightly smaller fixed width for officer cards */
+    }
+    .officer-card img {
+        width: 80px; /* Smaller image size */
+        height: 80px;
+    }
+    .officer-card h6 {
+        font-size: 1rem;
+    }
+    .officer-card p {
+        font-size: 0.8rem;
+    }
+
+    /* Social media icons adjustments */
+    .social-media-section {
+        padding: 1.5rem 1rem; /* Reduced padding */
+    }
+    .social-icon-link {
+        width: 50px; /* Smaller social icon circles */
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+
+/* Accordion Styling (consistent with card styling) */
+.accordion-item {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px var(--card-shadow); /* Lighter shadow for items */
+    margin-bottom: 1rem; /* Spacing between items */
+    overflow: hidden; /* Ensures rounded corners are visible */
+}
+
+.accordion-header {
+    background-color: #fff; /* White background for header */
+    border-bottom: 1px solid var(--border-color); /* Light border for separation */
+    border-radius: 0.75rem;
+}
+
+.accordion-button {
+    background-color: #fff;
+    color: var(--dark-blue-text);
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem; /* Rounded corners for the button */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    box-shadow: none !important; /* Remove default button shadow */
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--light-blue); /* Light blue when open */
+    color: var(--primary-blue); /* Blue text when open */
+    border-bottom-color: var(--primary-blue); /* Blue border when open */
+    border-bottom-left-radius: 0; /* Straight bottom edge when open */
+    border-bottom-right-radius: 0;
+}
+
+.accordion-button:focus {
+    outline: 0;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.accordion-body {
+    background-color: #fefefe; /* Slightly off-white for body */
+    color: var(--dark-blue-text);
+    padding: 1.5rem;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+}
+
+/* Nested Accordion Styling */
+.accordion .accordion-item .accordion-button {
+    font-size: 0.95rem; /* Slightly smaller for nested items */
+    padding: 0.8rem 1.2rem;
+    background-color: #f7f7f7; /* Lighter background for nested */
+}
+
+.accordion .accordion-item .accordion-button:not(.collapsed) {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.accordion .accordion-item .accordion-body {
+    background-color: #fff; /* White background for nested body */
+    padding: 1rem 1.5rem;
+}
+
+/* Officer Cards within Accordion */
+.officer-cards-container {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    gap: 1.5rem; /* Spacing between cards */
+    padding-bottom: 1rem; /* Space for scrollbar */
+    scroll-snap-type: x mandatory; /* Snap to cards */
+}
+
+.officer-card {
+    flex: 0 0 auto; /* Prevent cards from shrinking */
+    width: 250px; /* Fixed width for each card */
+    background-color: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    text-align: center;
+    scroll-snap-align: start; /* Align cards to start for snapping */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.officer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.officer-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid var(--primary-blue); /* Blue border for image */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hide scrollbar for aesthetic purposes (optional) */
+.officer-cards-container::-webkit-scrollbar {
+    height: 8px; /* Height of the horizontal scrollbar */
+}
+
+.officer-cards-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary-blue);
+    border-radius: 10px;
+}
+
+.officer-cards-container::-webkit-scrollbar-track {
+    background-color: var(--light-gray);
+    border-radius: 10px;
+}
+
+/* JIECEP Acronym Layout */
+.jiecep-acronym-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.jiecep-letter-card {
+    background-color: var(--light-blue);
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.jiecep-letter-card:hover {
+    transform: translateX(10px); /* Slide effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.jiecep-letter-card .letter {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 50px;
+    text-align: center;
+}
+
+.jiecep-letter-card .phrase-content h6 {
+    font-weight: 700;
+    color: var(--dark-blue-text);
+    margin-bottom: 0.25rem;
+}
+
+.jiecep-letter-card .phrase-content p {
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+    margin-bottom: 0;
+}
+
+/* Achievements & History Section */
+.achievements-section {
+    background-color: #fff; /* Card-like background */
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    padding: 2.5rem 1.5rem;
+    margin-top: 2rem; /* Space above */
+    margin-bottom: 2rem; /* Space below */
+}
+
+.achievements-section .section-title {
+    color: var(--dark-blue-text);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center; /* Center the title */
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding-top: 1rem;
+}
+
+.achievement-card {
+    background-color: var(--light-gray); /* Lighter background for individual cards */
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    border: 1px solid var(--border-color); /* Subtle border */
+}
+
+.achievement-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.achievement-card .icon-container {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.achievement-card h6 {
+    font-weight: 700;
+    color: var(--dark-blue-text);
+    margin-bottom: 0.5rem;
+}
+
+.achievement-card .year {
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+    margin-bottom: 0.75rem;
+}
+
+.achievement-card p {
+    font-size: 0.85rem;
+    color: var(--dark-blue-text);
+    line-height: 1.6;
+}
+
+
+/* Social Media Section */
+.social-media-section {
+    background-color: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    margin-top: 3rem; /* Space from content above */
+    margin-bottom: 2rem;
+}
+
+.social-media-section h5 {
+    color: var(--dark-blue-text);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem; /* Space between icons */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.social-icon-link {
+    width: 60px; /* Size of the circle */
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--light-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.social-icon-link:hover {
+    transform: translateY(-5px) scale(1.1); /* Lift and grow */
+    background-color: var(--primary-blue);
+    color: white;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}

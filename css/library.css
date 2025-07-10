@@ -1,0 +1,317 @@
+/* Reusing global variables from dashboard-design for consistent branding */
+:root {
+    --primary-blue: #007bff;
+    --light-blue: #e8f0fe;
+    --dark-blue-text: #2c3e50;
+    --medium-gray: #6c757d;
+    --light-gray: #f8f9fa;
+    --border-color: #dee2e6;
+    --card-shadow: rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-blue-text);
+    padding-bottom: 20px; /* Default padding for desktop */
+}
+
+/* Custom Navbar Styling (reused) */
+.navbar-custom {
+    background-color: #fff;
+    box-shadow: 0 2px 4px var(--card-shadow);
+}
+
+.navbar-brand img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--dark-blue-text);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--primary-blue);
+    /* Background for active tab can be added here if desired for top nav */
+}
+
+/* Bottom Navbar for Mobile/Tablet (reused) */
+.bottom-navbar {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -2px 4px var(--card-shadow);
+    z-index: 1000;
+    text-align: center; /* Center the icons/text */
+}
+
+.bottom-navbar .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    color: var(--medium-gray);
+    font-size: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.bottom-navbar .nav-link i {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.bottom-navbar .nav-link:hover,
+.bottom-navbar .nav-link.active-mobile { /* Custom class for active mobile link */
+    color: var(--primary-blue);
+}
+
+/* Main content padding for bottom navbar */
+@media (max-width: 991.98px) {
+    body {
+        padding-bottom: 70px; /* Space for the fixed bottom navbar */
+    }
+    .bottom-navbar {
+        display: flex; /* Show bottom nav on small screens */
+    }
+    .navbar-expand-lg .navbar-collapse {
+        display: none !important; /* Hide desktop nav items on small screens */
+    }
+}
+
+/* Card Styling (reused) */
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.5rem; /* Consistent spacing */
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-blue-text);
+}
+
+.card-title {
+    color: var(--dark-blue-text);
+    font-weight: 600;
+}
+
+/* Library Specific Styles */
+.search-bar .form-control {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-bar .form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.search-bar .btn-primary {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.search-bar .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Category Tabs */
+.nav-tabs {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--medium-gray);
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--primary-blue);
+    border-color: var(--light-blue);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    background-color: transparent; /* No background change for active tab */
+}
+
+/* File Category Sub-options (Folders) */
+.file-folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.folder-card {
+    background-color: #fff;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    padding: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.folder-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--light-blue);
+}
+
+.folder-card i {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+.folder-card .folder-title {
+    font-weight: 600;
+    color: var(--dark-blue-text);
+    font-size: 0.95rem;
+}
+
+/* Book/File Cards */
+.book-card {
+    background-color: #fff;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-card .book-thumbnail {
+    width: 80px;
+    height: 100px;
+    background-color: var(--light-gray);
+    border-radius: 0.5rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.book-card .book-thumbnail img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.book-card .book-details {
+    flex-grow: 1;
+}
+
+.book-card .book-title {
+    font-weight: 600;
+    color: var(--dark-blue-text);
+    margin-bottom: 0.25rem;
+}
+
+.book-card .book-author {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+    margin-bottom: 0.25rem;
+}
+
+.book-card .book-category {
+    font-size: 0.75rem;
+    color: var(--primary-blue);
+    font-weight: 500;
+}
+
+.no-results {
+    text-align: center;
+    color: var(--medium-gray);
+    padding: 2rem;
+}
+
+/* Custom style for the dropdown button in files tab */
+.folder-dropdown .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    color: var(--dark-blue-text);
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-dropdown .dropdown-toggle:after {
+    margin-left: auto;
+}
+
+.folder-dropdown .dropdown-menu {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.folder-dropdown .dropdown-item {
+    color: var(--dark-blue-text);
+    font-weight: 400;
+    padding: 0.75rem 1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.folder-dropdown .dropdown-item.active,
+.folder-dropdown .dropdown-item:active,
+.folder-dropdown .dropdown-item:focus {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    outline: none;
+}
+
+.folder-dropdown .dropdown-item:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
