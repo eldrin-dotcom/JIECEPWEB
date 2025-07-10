@@ -1,11 +1,9 @@
 // js/firebase-init.js
 
-// Import the functions you need from the Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// Firebase configuration provided by the user
 const firebaseConfig = {
     apiKey: "AIzaSyD8jtMJwKMWrnowPIHCP7OajKMwXD8Ybz8",
     authDomain: "jiecep-website-ca9b3.firebaseapp.com",
@@ -16,31 +14,26 @@ const firebaseConfig = {
     measurementId: "G-5ZEM3S2X79"
 };
 
-// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Attempt initial sign-in (anonymous or with custom token)
-// This is typically done to establish a session for Canvas environment
-// or to handle anonymous users before they explicitly sign up/in.
-async function initializeAuth() {
-    try {
-        // Since a hardcoded config is provided, we won't rely on __initial_auth_token
-        // for initial login in this setup. Instead, we can sign in anonymously
-        // or remove this block if all users are expected to explicitly sign in/up.
-        await signInAnonymously(auth);
-        console.log("Firebase initialized: Signed in anonymously.");
-    } catch (error) {
-        console.error("Error during Firebase initial authentication:", error);
-        // In a real app, you might want to show a more user-friendly error
+// --- Set up an authentication state listener ---
+// This function will be called whenever the user's login status changes
+// (e.g., they log in, log out, or the page loads and Firebase checks their session)
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is signed in. You can now show private content.
+        console.log("User is logged in:", user.email || user.uid);
+        // You might want to dispatch a custom event here
+        // or call a function in your main app logic to update UI
+    } else {
+        // User is signed out. Show login/registration forms.
+        console.log("User is logged out.");
+        // You might want to redirect to login page or hide private content
     }
-}
+});
 
-// Call the initialization function
-initializeAuth();
+console.log("Firebase app and services initialized. Waiting for auth state...");
 
-// Export initialized services
 export { app, auth, db };
