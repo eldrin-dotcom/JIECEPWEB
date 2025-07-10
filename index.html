@@ -348,7 +348,7 @@
             try {
                 await signInUser(email, password);
                 // Redirect to dashboard on successful login, now correctly pointing to the portal folder
-                window.location.href = "./portal/dashboard.html"; 
+                window.location.href = "/portal/dashboard.html"; 
             } catch (error) {
                 let errorMessage = "Login failed. Please try again.";
                 if (error.code === 'auth/invalid-email') {
