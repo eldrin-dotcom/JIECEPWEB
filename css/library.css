@@ -18,9 +18,17 @@ body {
 
 /* Custom Navbar Styling (reused) */
 .navbar-custom {
-    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030; /* ensures it stays above other content */
+    background-color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+    backdrop-filter: blur(10px); /* subtle blur for glass-like effect */
     box-shadow: 0 2px 4px var(--card-shadow);
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 }
+
 
 .navbar-brand img {
     height: 30px;
@@ -31,7 +39,7 @@ body {
     color: var(--dark-blue-text);
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
+    border-radius: 0.375rem; /* For hover effect */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -40,23 +48,25 @@ body {
     color: var(--primary-blue);
 }
 
+/* Active link styling for desktop - only changes text color as per design */
 .navbar-nav .nav-link.active {
     color: var(--primary-blue);
-    /* Background for active tab can be added here if desired for top nav */
 }
 
-/* Bottom Navbar for Mobile/Tablet (reused) */
+/* Bottom Navbar for Mobile/Tablet */
 .bottom-navbar {
     display: none; /* Hidden by default */
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #fff;
-    box-shadow: 0 -2px 4px var(--card-shadow);
+    background-color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+    backdrop-filter: blur(10px); /* blur effect for transparency */
+    box-shadow: 0 -2px 4px var(--card-shadow); /* shadow on top edge */
     z-index: 1000;
-    text-align: center; /* Center the icons/text */
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 }
+
 
 .bottom-navbar .nav-link {
     display: flex;
@@ -74,10 +84,10 @@ body {
     margin-bottom: 0.25rem;
 }
 
-.bottom-navbar .nav-link:hover,
-.bottom-navbar .nav-link.active-mobile { /* Custom class for active mobile link */
+.bottom-navbar .nav-link:hover {
     color: var(--primary-blue);
 }
+
 
 /* Main content padding for bottom navbar */
 @media (max-width: 991.98px) {
