@@ -174,20 +174,53 @@ body {
     transition: width 1s ease-in-out;
 }
 
-
-.welcome-card .actions .btn {
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #fff;
-    font-weight: 500;
-    margin-right: 1rem;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+/* Container stays side by side */
+.tab-container .actions {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
-.welcome-card .actions .btn:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    border-color: #fff;
+/* Base tab button */
+.tab-btn {
+  position: relative;
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 10px 20px;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  color: inherit; /* Inherit parent text color */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Hover: semi-transparent blue background */
+.tab-btn:hover {
+  background-color: rgba(0, 123, 255, 0.1); /* Bootstrap primary with 10% opacity */
+}
+
+/* Add underline pseudo-element for active tab only */
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #007bff; /* Bootstrap primary */
+}
+
+/* Make icon + text blue when active */
+.tab-btn.active {
+  color: #007bff;
+}
+
+/* Optional: make the icon blue too */
+.tab-btn.active i {
+  color: #007bff;
+}
+
+
 
 
 
