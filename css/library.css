@@ -14,6 +14,7 @@ body {
     background-color: var(--light-gray);
     color: var(--dark-blue-text);
     padding-bottom: 20px; /* Default padding for desktop */
+    padding-top: 70px;
 }
 
 /* Custom Navbar Styling (reused) */
