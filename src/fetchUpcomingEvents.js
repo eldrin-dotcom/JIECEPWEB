@@ -1,15 +1,13 @@
+// src/fetchUpcomingEvents.js
 import { client } from './sanityClient';
 
 export default async function fetchUpcomingEvents() {
-  const query = `*[_type == "upcomingEventsSection"][0] {
+  const query = `*[_type == "event" && publishedAt <= now() && (!defined(expiresAt) || expiresAt > now())] | order(publishedAt desc) {
     title,
-    events[] {
-      day,
-      month,
-      title,
-      dateTimeLocation,
-      category
-    }
+    day,
+    month,
+    dateTimeLocation,
+    category
   }`;
 
   try {
