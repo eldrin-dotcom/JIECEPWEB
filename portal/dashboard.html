@@ -160,6 +160,16 @@
             if (user) {
                 // User is signed in, update welcome message
                 console.log("User logged in:", user.email || user.uid);
+                // Extract username from email or use display name if available
+                if (user.email) {
+                let username = user.email.split('@')[0].replace(/[0-9]/g, '');
+                username = username.charAt(0).toUpperCase() + username.slice(1);
+                welcomeMessage.textContent = `Welcome, ${username}!`;
+            }
+
+
+                // Optionally hide login/signup forms and show dashboard content
+                // if this script was on a public page. For dashboard, it's assumed
                 // the user *should* be logged in. If not, redirect.
             } else {
                 // User is signed out, redirect to login page
