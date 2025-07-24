@@ -8,7 +8,7 @@ import {
     signOut,
     GoogleAuthProvider, // <-- NEW: Import GoogleAuthProvider
     signInWithPopup     // <-- NEW: Import signInWithPopup
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+} from "firebase/auth";
 
 /**
  * Signs up a new user with email and password.

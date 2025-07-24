@@ -4,36 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JIECEP-PUPMC ECEntral</title>
-    <link rel="icon" href="images/jiecep logo.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/jiecep%20logo-DAcIr0dj.svg" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- In-app browser detection script -->
     <script>
     (function() {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
-
-        // Detect Facebook, Messenger, Instagram in-app browsers
         const isInAppBrowser = /FBAN|FBAV|Instagram/.test(ua);
 
         if (isInAppBrowser) {
-        // Inform the user and provide a clickable fallback link
-        document.body.innerHTML = `
-            <div style="font-family: sans-serif; text-align: center; padding: 2rem;">
-            <h2>This page works best in your main browser</h2>
-            <p>You're currently using an in-app browser (Messenger/Facebook/Instagram) which may cause issues.</p>
-            <a href="${window.location.href}" target="_blank" rel="noopener noreferrer"
-                style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #007bff; color: #fff; text-decoration: none; border-radius: 0.5rem;">
-                    Open in Browser
-            </a>
-            </div>
-        `;
+            document.body.innerHTML = `
+                <div style="font-family: sans-serif; text-align: center; padding: 2rem;">
+                <h2>This page works best in your main browser</h2>
+                <p>You're currently using an in-app browser (Messenger/Facebook/Instagram) which may cause issues.</p>
+                <a href="${window.location.href}" target="_blank" rel="noopener noreferrer"
+                    style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #007bff; color: #fff; text-decoration: none; border-radius: 0.5rem;">
+                        Open in Browser
+                </a>
+                </div>
+            `;
         }
     })();
     </script>
 
     <style>
-
-       :root {
+        :root {
             --primary-blue: oklch(70% 0.15 220);
             --light-blue: oklch(90% 0.08 220);
         }
@@ -53,7 +51,7 @@
             overflow: hidden;
         }
 
-        /* 👇 Transparent Logo Layer — covers half screen or more */
+        /* Transparent Logo Layer — covers half screen or more */
         body::before {
             content: "";
             position: absolute;
@@ -61,7 +59,7 @@
             right: 0;
             width: 700px; /* Covers right side responsively */
             height: 100vh;
-            background: url('images/JIECEP-logo.png') no-repeat right center;
+            background: url('/assets/JIECEP-logo-DZmOcCyK.png') no-repeat right center;
             background-size: 700px auto; /* Maintain logo size */
             background-repeat: no-repeat;
             opacity: 0.12;
@@ -69,7 +67,7 @@
             pointer-events: none;
         }
 
-        /* 👇 Glassmorphism container */
+        /* Glassmorphism container */
         .auth-container {
             background-color: rgba(255, 255, 255, 0.2);
             padding: 30px;
@@ -158,6 +156,30 @@
                 font-size: 1.8rem;
             }
         }
+
+        /* Google Button Styles */
+        .btn-google {
+            background-color: #4285F4; /* Google Blue */
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem; /* Space between icon and text */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background-color: #357ae8; /* Darker blue on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-google .fab {
+            font-size: 1.25rem; /* Icon size */
+        }
     </style>
 </head>
 <body>
@@ -176,6 +198,16 @@
             <a href="#" id="forgotPasswordLink" class="d-block text-end mb-4 toggle-link">Forgot Password?</a>
             <button id="loginBtn" class="btn btn-primary w-100 mb-3">Login</button>
             <p>Don't have an account? <a href="#" id="showSignup" class="toggle-link">Sign Up</a></p>
+
+            <!-- OR Separator and Google Button for Login Form -->
+            <div class="d-flex align-items-center my-4">
+                <hr class="flex-grow-1">
+                <span class="mx-2 text-muted">OR</span>
+                <hr class="flex-grow-1">
+            </div>
+            <button id="google-signin-btn-login" class="btn btn-google w-100 mb-3">
+                <i class="fab fa-google"></i> Sign in with Google
+            </button>
         </div>
 
         <div id="signupForm" style="display: none;">
@@ -194,14 +226,28 @@
             </div>
             <button id="signupBtn" class="btn btn-primary w-100 mb-3">Sign Up</button>
             <p>Already have an account? <a href="#" id="showLogin" class="toggle-link">Login</a></p>
+
+            <!-- OR Separator and Google Button for Signup Form -->
+            <div class="d-flex align-items-center my-4">
+                <hr class="flex-grow-1">
+                <span class="mx-2 text-muted">OR</span>
+                <hr class="flex-grow-1">
+            </div>
+            <button id="google-signin-btn-signup" class="btn btn-google w-100 mb-3">
+                <i class="fab fa-google"></i> Sign up with Google
+            </button>
         </div>
     </div>
 
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Main application script for authentication logic -->
     <script type="module">
-        // Changed import paths to be relative from the current directory (e.g., ./js/auth.js)
-        import { signInUser, signUpUser } from "./src/auth.js";
+        // Import necessary authentication functions from auth.js
+        // NOTE: Adjust these paths if your file structure is different.
+        // Assuming 'auth.js' and 'firebase-init.js' are in a 'js' folder relative to this HTML.
+        import { signInUser, signUpUser, signInWithGoogle } from "./src/auth";
         import { auth } from "./src/firebase-init.js";
         import { onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
@@ -226,6 +272,10 @@
         const toggleSignupPasswordBtn = document.getElementById('toggleSignupPassword');
         const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
 
+        // Google Sign-In Buttons
+        const googleSignInBtnLogin = document.getElementById('google-signin-btn-login');
+        const googleSignInBtnSignup = document.getElementById('google-signin-btn-signup');
+
 
         // Function to display messages to the user
         function showMessage(message, type = 'danger') {
@@ -245,7 +295,7 @@
                 if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
                     const bootstrapAlert = bootstrap.Alert.getInstance(alertDiv);
                     if (bootstrapAlert) {
-                        bootstrapAlert.dispose();
+                        bootstrapAlert.dispose(); // Use dispose for proper cleanup
                     } else {
                         // Fallback if getInstance doesn't return an instance (e.g., if it was already dismissed manually)
                         alertDiv.remove();
@@ -348,20 +398,10 @@
             try {
                 await signInUser(email, password);
                 // Redirect to dashboard on successful login, now correctly pointing to the portal folder
-                window.location.href = "/portal/dashboard.html"; 
+                window.location.href = "./portal/dashboard.html"; 
             } catch (error) {
-                let errorMessage = "Login failed. Please try again.";
-                if (error.code === 'auth/invalid-email') {
-                    errorMessage = "Invalid email address.";
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMessage = "Incorrect password.";
-                } else if (error.code === 'auth/user-not-found') {
-                    errorMessage = "No account found with this email.";
-                } else if (error.code === 'auth/invalid-credential') {
-                    // Firebase sometimes uses 'invalid-credential' for wrong password/user not found combos
-                    errorMessage = "Invalid email or password."; 
-                }
-                showMessage(errorMessage, "danger");
+                // Error handling from auth.js is thrown as a new Error object
+                showMessage(error.message, "danger");
             }
         });
 
@@ -381,21 +421,19 @@
                 return;
             }
 
+            if (password.length < 6) {
+                showMessage("Password should be at least 6 characters.", "danger");
+                return;
+            }
+
             try {
                 await signUpUser(email, password);
                 showMessage("Account created successfully! Please login.", "success");
                 // Optionally switch back to login form after successful signup
                 showLoginLink.click(); 
             } catch (error) {
-                let errorMessage = "Sign up failed. Please try again.";
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = "This email is already in use.";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = "Invalid email address.";
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = "Password should be at least 6 characters.";
-                }
-                showMessage(errorMessage, "danger");
+                // Error handling from auth.js is thrown as a new Error object
+                showMessage(error.message, "danger");
             }
         });
 
@@ -425,6 +463,29 @@
                 }
             });
         } 
+
+        // Google Sign-In Event Listeners
+        if (googleSignInBtnLogin) {
+            googleSignInBtnLogin.addEventListener('click', async () => {
+                try {
+                    await signInWithGoogle();
+                    // If successful, onAuthStateChanged will handle the redirect
+                } catch (error) {
+                    showMessage(error.message, "danger");
+                }
+            });
+        }
+
+        if (googleSignInBtnSignup) {
+            googleSignInBtnSignup.addEventListener('click', async () => {
+                try {
+                    await signInWithGoogle();
+                    // If successful, onAuthStateChanged will handle the redirect
+                } catch (error) {
+                    showMessage(error.message, "danger");
+                }
+            });
+        }
 
         // Optional: Check auth state on load (e.g., if user is already logged in)
         onAuthStateChanged(auth, (user) => {
