@@ -38,14 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     eventList.innerHTML = events.map(event => {
-      const date = new Date(event.publishedAt)
-      const day = String(date.getDate()).padStart(2, '0')
-      const month = monthAbbr[date.getMonth()]
-
       return `
         <div class="event-item mb-3">
           <div class="event-date-box">
-            ${day} <small>${month}</small>
+            ${event.day} <small>${event.month}</small>
           </div>
           <div class="event-content">
             <p class="event-title mb-1">${event.title}</p>
