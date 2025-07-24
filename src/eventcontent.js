@@ -4,20 +4,22 @@ import { client } from './sanityClient.js'
 document.addEventListener('DOMContentLoaded', () => {
   const eventList = document.getElementById('upcoming-events')
 
-  const monthAbbr = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-
   const fetchEvents = async () => {
-    const query = `*[_type == "event" && publishedAt <= now() && (!defined(expiresAt) || expiresAt > now())] {
+    // Modified query: include 'day' and 'month' directly from the schema
+    const query = `*[_type == "event" && publishedAt > now()] {
       title,
       dateTimeLocation,
       category,
-      publishedAt
+      publishedAt,
+      day,  // Include the 'day' field from your schema
+      month // Include the 'month' field from your schema
     }`
 
     try {
       const events = await client.fetch(query)
 
-      // Sort ascending by publishedAt
+      // Sort ascending by publishedAt to show the soonest events first.
+      // This is still good practice to ensure temporal order, even if day/month are separate fields.
       events.sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt))
 
       return events
@@ -38,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     eventList.innerHTML = events.map(event => {
+      // Directly use event.day and event.month from the fetched data
+      // No need to create a Date object or use monthAbbr here for display
       return `
         <div class="event-item mb-3">
           <div class="event-date-box">
