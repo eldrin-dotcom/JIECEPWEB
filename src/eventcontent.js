@@ -1,34 +1,65 @@
-async function renderUpcomingEvents(containerId = 'upcoming-events') {
-  const container = document.getElementById(containerId);
-  if (!container) return;
+// src/eventcontent.js
+import { client } from './sanityClient.js'
 
-  const events = await fetchUpcomingEvents();
+document.addEventListener('DOMContentLoaded', () => {
+  const eventList = document.getElementById('upcoming-events')
 
-  if (!events || events.length === 0) {
-    container.innerHTML = '<p>No upcoming events found.</p>';
-    return;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }).format(date)
   }
 
-  container.innerHTML = ''; // Clear previous
+  const fetchEvents = async () => {
+    const query = `*[_type == "event" && publishedAt <= now() && (!defined(expiresAt) || expiresAt > now())] {
+      title,
+      day,
+      month,
+      dateTimeLocation,
+      category,
+      publishedAt
+    }`
 
-  events.forEach(event => {
-    const item = document.createElement('div');
-    item.className = 'event-item';
-    item.innerHTML = `
-      <div class="event-date-box">
-        ${event.day} <small>${event.month}</small>
-      </div>
-      <div class="event-content">
-        <p class="event-title mb-1">${event.title}</p>
-        <small class="event-date-time text-muted">${event.dateTimeLocation}</small>
-        <small class="event-location d-block">${event.category}</small>
-      </div>
-    `;
-    container.appendChild(item);
-  });
-}
+    try {
+      const events = await client.fetch(query)
 
-// ✅ Automatically render when the script loads
-document.addEventListener('DOMContentLoaded', () => {
-  renderUpcomingEvents();
-});
+      // Sort in ascending order by publishedAt
+      events.sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt))
+
+      return events
+    } catch (err) {
+      console.error('Error fetching events:', err)
+      return []
+    }
+  }
+
+  const renderEvents = async () => {
+    eventList.innerHTML = `<li class="list-group-item text-muted">Loading events...</li>`
+
+    const events = await fetchEvents()
+
+    if (!events.length) {
+      eventList.innerHTML = `<li class="list-group-item text-muted">No upcoming events available.</li>`
+      return
+    }
+
+    eventList.innerHTML = events.map(event => {
+      return `
+        <li class="list-group-item">
+          <p class="event-title mb-1">${event.title}</p>
+          <small class="event-date-time text-muted d-block">
+            ${event.dateTimeLocation}
+          </small>
+          <small class="event-date text-muted d-block">
+            ${formatDate(event.publishedAt)} | ${event.category}
+          </small>
+        </li>
+      `
+    }).join('')
+  }
+
+  renderEvents()
+})
