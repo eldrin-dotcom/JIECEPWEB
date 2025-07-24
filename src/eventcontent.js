@@ -4,19 +4,18 @@ export default async function renderUpcomingEvents(containerId = 'upcoming-event
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const events = await fetchUpcomingEvents();
+  const data = await fetchUpcomingEvents();
 
-  if (!events || events.length === 0) {
+  if (!data || !data.events || data.events.length === 0) {
     container.innerHTML = '<p>No upcoming events found.</p>';
     return;
   }
 
   container.innerHTML = ''; // Clear previous content
 
-  events.forEach(event => {
+  data.events.forEach(event => {
     const item = document.createElement('div');
     item.className = 'event-item';
-
     item.innerHTML = `
       <div class="event-date-box">
         ${event.day} <small>${event.month}</small>
@@ -27,12 +26,10 @@ export default async function renderUpcomingEvents(containerId = 'upcoming-event
         <small class="event-location d-block">${event.category}</small>
       </div>
     `;
-
     container.appendChild(item);
   });
 }
 
-// Auto-run when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   renderUpcomingEvents();
 });
