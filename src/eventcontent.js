@@ -1,19 +1,17 @@
-import fetchUpcomingEvents from './fetchUpcomingEvents.js';
-
-export default async function renderUpcomingEvents(containerId = 'upcoming-events') {
+async function renderUpcomingEvents(containerId = 'upcoming-events') {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const data = await fetchUpcomingEvents();
+  const events = await fetchUpcomingEvents();
 
-  if (!data || !data.events || data.events.length === 0) {
+  if (!events || events.length === 0) {
     container.innerHTML = '<p>No upcoming events found.</p>';
     return;
   }
 
-  container.innerHTML = ''; // Clear previous content
+  container.innerHTML = ''; // Clear previous
 
-  data.events.forEach(event => {
+  events.forEach(event => {
     const item = document.createElement('div');
     item.className = 'event-item';
     item.innerHTML = `
@@ -30,6 +28,7 @@ export default async function renderUpcomingEvents(containerId = 'upcoming-event
   });
 }
 
+// ✅ Automatically render when the script loads
 document.addEventListener('DOMContentLoaded', () => {
   renderUpcomingEvents();
 });

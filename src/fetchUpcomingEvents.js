@@ -2,6 +2,8 @@
 import { client } from './sanityClient';
 
 export default async function fetchUpcomingEvents() {
+  const now = new Date().toISOString();
+
   const query = `*[_type == "event" && publishedAt <= now() && (!defined(expiresAt) || expiresAt > now())] | order(publishedAt desc) {
     title,
     day,
