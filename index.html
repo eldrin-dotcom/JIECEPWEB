@@ -399,11 +399,16 @@
                 const userCredential = await signUpUser(email, password);
                 const uid = userCredential.user.uid;
 
-                // ✅ Save user role to Firestore here
+                try {
+                console.log("Creating user doc...");
                 await setDoc(doc(db, "users", uid), {
                     email: email,
-                    isAdmin: false  // Default — update manually in Firestore if needed
+                    isAdmin: false
                 });
+                console.log("User doc created!");
+                } catch (err) {
+                console.error("Error writing to Firestore:", err);
+                }
 
                 showMessage("Account created successfully! Please login.", "success");
                 showLoginLink.click(); // Go back to login form
