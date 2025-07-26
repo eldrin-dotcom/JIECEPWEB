@@ -54,11 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderAnnouncements('desc')
 
-  sortSelect.addEventListener('change', (e) => {
-    const sortOrder = e.target.value
-    renderAnnouncements(sortOrder)
-  })
-})
 
 
 console.log('👀 Fetching announcements from Sanity...')
+})
