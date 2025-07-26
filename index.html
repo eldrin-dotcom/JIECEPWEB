@@ -384,26 +384,34 @@
                 showMessage("Please fill in all fields.", "danger");
                 return;
             }
+
             if (password !== confirmPassword) {
                 showMessage("Passwords do not match.", "danger");
                 return;
             }
+
             if (password.length < 6) {
                 showMessage("Password should be at least 6 characters.", "danger");
                 return;
             }
 
             try {
-                signupBtn.disabled = true;
-                await signUpUser(email, password);
+                const userCredential = await signUpUser(email, password);
+                const uid = userCredential.user.uid;
+
+                // ✅ Save user role to Firestore here
+                await setDoc(doc(db, "users", uid), {
+                    email: email,
+                    isAdmin: false  // Default — update manually in Firestore if needed
+                });
+
                 showMessage("Account created successfully! Please login.", "success");
-                showLoginLink.click();
+                showLoginLink.click(); // Go back to login form
             } catch (error) {
                 showMessage(error.message, "danger");
-            } finally {
-                signupBtn.disabled = false;
             }
         });
+
 
         if (forgotPasswordLink) {
             forgotPasswordLink.addEventListener('click', async (e) => {
