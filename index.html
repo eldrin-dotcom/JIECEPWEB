@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JIECEP-PUPMC ECEntral</title>
-    <link rel="icon" href="/assets/jiecep%20logo-DAcIr0dj.svg" type="image/svg+xml">
+    <link rel="icon" href="/images/jiecep logo.svg" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
     <!-- In-app browser detection script -->
     <script>
     (function() {
@@ -22,7 +22,7 @@
                 <p>You're currently using an in-app browser (Messenger/Facebook/Instagram) which may cause issues.</p>
                 <a href="${window.location.href}" target="_blank" rel="noopener noreferrer"
                     style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #007bff; color: #fff; text-decoration: none; border-radius: 0.5rem;">
-                        Open in Browser
+                            Open in Browser
                 </a>
                 </div>
             `;
@@ -59,7 +59,7 @@
             right: 0;
             width: 700px; /* Covers right side responsively */
             height: 100vh;
-            background: url('images/JIECEP-logo.png') no-repeat right center;
+            background: url('images/JIECEP-logo.png') no-repeat right center; /* Placeholder for your logo */
             background-size: 700px auto; /* Maintain logo size */
             background-repeat: no-repeat;
             opacity: 0.12;
@@ -81,6 +81,8 @@
             text-align: center;
             position: relative;
             z-index: 1;
+            /* Initially hidden, shown by JS */
+            display: none;
         }
 
         .auth-container h1 {
@@ -168,32 +170,64 @@
         }
 
 
-        /* Google Button Styles */
-        .btn-google {
-            background-color: #4285F4; /* Google Blue */
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
+        /* Spinner styles */
+        .spinner {
+            display: inline-block;
+            width: 20px; /* Adjust size as needed */
+            height: 20px; /* Adjust size as needed */
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007bff; /* Primary blue for the spinner */
+            animation: spin 0.8s ease-in-out infinite;
+            -webkit-animation: spin 0.8s ease-in-out infinite;
+            vertical-align: middle; /* Align with text */
+            margin-left: 8px; /* Space between button text and spinner if inside a button */
+        }
+
+        /* Keyframes for the spin animation */
+        @keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+        @-webkit-keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+
+        /* Class to hide elements */
+        .hidden {
+            display: none !important; /* Use !important to ensure it overrides other display properties */
+        }
+
+        /* Full page loading spinner */
+        #fullPageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 0.75rem; /* Space between icon and text */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
         }
-
-        .btn-google:hover {
-            background-color: #357ae8; /* Darker blue on hover */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-google .fab {
-            font-size: 1.25rem; /* Icon size */
+        #fullPageLoader .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-blue);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
         }
     </style>
 </head>
 <body>
+    <!-- Full Page Loader (initially visible) -->
+    <div id="fullPageLoader">
+        <div class="loading-spinner"></div>
+        <p class="mt-4 text-gray-600">Please Wait...</p>
+    </div>
+
     <div class="auth-container">
         <h1 id="authTitle" class="mb-3">Login</h1>
         <div id="messageContainer" class="message-container"></div>
@@ -207,15 +241,15 @@
                 </button>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="form-check form-switch mb-4 text-start">
-                        <input class="form-check-input" type="checkbox" role="switch" id="adminLoginToggle">
-                        <label class="form-check-label" for="adminLoginToggle">Admin</label>
+                <div class="form-check form-switch text-start">
+                    <input class="form-check-input" type="checkbox" role="switch" id="adminLoginToggle">
+                    <label class="form-check-label" for="adminLoginToggle">Admin Login</label>
                 </div>
-                <a href="#" id="forgotPasswordLink" class="d-block text-end mb-4 toggle-link">Forgot Password?</a>
-            </div>  
+                <a href="#" id="forgotPasswordLink" class="d-block text-end toggle-link">Forgot Password?</a>
+            </div>
             <button id="loginBtn" class="btn btn-primary w-100 mb-3">Login</button>
+            <div id="login-spinner" class="spinner hidden" role="status" aria-live="polite"></div>
             <p>Don't have an account? <a href="#" id="showSignup" class="toggle-link">Sign Up</a></p>
-
         </div>
 
         <div id="signupForm" style="display: none;">
@@ -233,7 +267,9 @@
                 </button>
             </div>
             <button id="signupBtn" class="btn btn-primary w-100 mb-3">Sign Up</button>
+            <div id="signup-spinner" class="spinner hidden" role="status" aria-live="polite"></div>
             <p>Already have an account? <a href="#" id="showLogin" class="toggle-link">Login</a></p>
+        </div>
 
     </div>
 
@@ -243,12 +279,14 @@
     <!-- Main application script for authentication logic -->
     <script type="module">
         // Import necessary authentication functions from auth.js
-        import { signInUser, signUpUser } from "./src/auth";
+        import { signInUser, signUpUser, sendPasswordReset, signOutUser, getFirebaseErrorMessage } from "./src/auth.js";
         import { auth, db } from "./src/firebase-init.js";
-        import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
-        import { doc, getDoc } from "firebase/firestore";
+        import { onAuthStateChanged } from "firebase/auth";
+        import { doc, setDoc } from "firebase/firestore"; // Removed getDoc as it's not used here directly for initial user data check
 
         // DOM Elements
+        const fullPageLoader = document.getElementById('fullPageLoader');
+        const authContainer = document.querySelector('.auth-container');
         const authTitle = document.getElementById("authTitle");
         const loginForm = document.getElementById("loginForm");
         const signupForm = document.getElementById("signupForm");
@@ -263,33 +301,55 @@
         const showLoginLink = document.getElementById("showLogin");
         const forgotPasswordLink = document.getElementById("forgotPasswordLink");
         const messageContainer = document.getElementById("messageContainer");
+        const adminLoginToggle = document.getElementById("adminLoginToggle");
 
         // Password toggle buttons
         const toggleLoginPasswordBtn = document.getElementById('toggleLoginPassword');
         const toggleSignupPasswordBtn = document.getElementById('toggleSignupPassword');
         const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
 
-        // Google Sign-In Buttons (not implemented in this snippet)
-        const googleSignInBtnLogin = document.getElementById('google-signin-btn-login');
-        const googleSignInBtnSignup = document.getElementById('google-signin-btn-signup');
+        const loginSpinner = document.getElementById("login-spinner");
+        const signupSpinner = document.getElementById("signup-spinner");
 
+        // --- Message Display Function ---
         function showMessage(message, type = 'danger') {
+            if (!messageContainer) {
+                console.warn('Message container not found!');
+                return;
+            }
+
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
             alertDiv.setAttribute('role', 'alert');
-            alertDiv.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-            messageContainer.innerHTML = '';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+
+            messageContainer.innerHTML = ''; // Clear previous message
             messageContainer.appendChild(alertDiv);
+
+            // Initialize alert instance manually
+            if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                new bootstrap.Alert(alertDiv);
+            }
+
+            // Auto-dismiss after 5 seconds
             setTimeout(() => {
                 if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
-                    const bootstrapAlert = bootstrap.Alert.getInstance(alertDiv);
-                    bootstrapAlert ? bootstrapAlert.dispose() : alertDiv.remove();
+                    const instance = bootstrap.Alert.getInstance(alertDiv);
+                    if (instance) {
+                        instance.close(); // Trigger Bootstrap dismiss animation
+                    } else {
+                        alertDiv.remove(); // Fallback
+                    }
                 } else {
-                    alertDiv.remove();
+                    alertDiv.remove(); // Fallback
                 }
             }, 5000);
         }
 
+        // --- Password Visibility Toggles ---
         function togglePasswordVisibility(passwordInput, toggleButton) {
             const icon = toggleButton.querySelector('i');
             const isHidden = passwordInput.type === "password";
@@ -306,19 +366,29 @@
         if (toggleConfirmPasswordBtn && confirmPasswordInput)
             toggleConfirmPasswordBtn.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordBtn));
 
+        // --- Form Input Clearing and Reset ---
         function clearFormInputsAndResetVisibility() {
-            [loginEmailInput, loginPasswordInput, signupEmailInput, signupPasswordInput, confirmPasswordInput].forEach(input => input.value = '');
-            [['password', toggleLoginPasswordBtn], ['password', toggleSignupPasswordBtn], ['password', toggleConfirmPasswordBtn]].forEach(([type, btn], i) => {
-                const input = [loginPasswordInput, signupPasswordInput, confirmPasswordInput][i];
+            [loginEmailInput, loginPasswordInput, signupEmailInput, signupPasswordInput, confirmPasswordInput].forEach(input => {
+                if (input) input.value = ''; // Check if input exists before setting value
+            });
+            // Reset password input types and icons
+            [
+                { input: loginPasswordInput, btn: toggleLoginPasswordBtn },
+                { input: signupPasswordInput, btn: toggleSignupPasswordBtn },
+                { input: confirmPasswordInput, btn: toggleConfirmPasswordBtn }
+            ].forEach(({ input, btn }) => {
                 if (input && btn) {
-                    input.type = type;
+                    input.type = 'password';
                     const icon = btn.querySelector('i');
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
+                    if (icon) { // Check if icon exists
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    }
                 }
             });
         }
 
+        // --- Form Switching Logic ---
         showSignupLink.addEventListener("click", (e) => {
             e.preventDefault();
             authTitle.textContent = "Sign Up";
@@ -337,44 +407,62 @@
             clearFormInputsAndResetVisibility();
         });
 
+        // --- Login Button Handler ---
         loginBtn.addEventListener("click", async () => {
             const email = loginEmailInput.value.trim();
             const password = loginPasswordInput.value.trim();
-            const isAdmin = document.getElementById("adminLoginToggle").checked;
+            const isAdminLoginAttempt = adminLoginToggle.checked; // User's intent to log in as admin
 
             if (!email || !password) {
                 showMessage("Please enter both email and password.", "danger");
                 return;
             }
 
+            // Show Spinner and Disable Button
+            loginBtn.classList.add('hidden');
+            loginSpinner.classList.remove('hidden');
+            loginBtn.disabled = true; // Disable the button to prevent multiple clicks
+
             try {
-                loginBtn.disabled = true;
-                const user = await signInUser(email, password);
-                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const user = await signInUser(email, password); // Use the wrapper function
+                const idTokenResult = await user.getIdTokenResult(true); // Force refresh token for latest claims
+                const userIsAdminClaim = idTokenResult.claims.admin === true;
 
-                if (!userDoc.exists()) {
-                    showMessage("User record not found in database.", "danger");
-                    return;
-                }
+                // --- Role-based Redirection Logic ---
+                // This logic is now based on custom claims, which are more secure.
+                // The Firestore 'isAdmin' field is still used during signup for initial setup,
+                // but custom claims are the source of truth for runtime role checks.
 
-                const userData = userDoc.data();
-                const role = userData.isAdmin ? "admin" : "user";
-
-                if (isAdmin && role === "admin") {
+                if (isAdminLoginAttempt && userIsAdminClaim) {
+                    // User attempted admin login AND has admin claim
                     window.location.href = "https://jiecep.sanity.studio/structure/event;ce09e0c7-2da8-4706-915c-ec19795aca7b";
-                } else if (!isAdmin && role === "user") {
+                } else if (!isAdminLoginAttempt && !userIsAdminClaim) {
+                    // User attempted regular login AND does NOT have admin claim
                     window.location.href = "./portal/dashboard.html";
-                } else {
-                    showMessage("Invalid login mode for your role.", "danger");
+                } else if (isAdminLoginAttempt && !userIsAdminClaim) {
+                    // User attempted admin login but does NOT have admin claim
+                    showMessage(getFirebaseErrorMessage('auth/permission-denied'), "danger"); // Use getFirebaseErrorMessage
+                    await signOutUser(); // Sign out the user immediately if they tried to log in as admin without permission
+                } else if (!isAdminLoginAttempt && userIsAdminClaim) {
+                    // User attempted regular login but HAS admin claim
+                    // This scenario might be okay, or you might want to redirect them to the admin panel
+                    // based on your app's policy. For now, we'll let them go to dashboard.
+                    // Or, you could force them to the admin panel:
+                    window.location.href = "https://jiecep.sanity.studio/structure/event;ce09e0c7-2da8-4706-915c-ec19795aca7b"; // Force admin to admin panel
                 }
 
             } catch (error) {
-                showMessage(error.message, "danger");
+                // Use getFirebaseErrorMessage for consistent error messages
+                showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
             } finally {
+                // Always hide spinner and enable button after operation
+                loginSpinner.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
                 loginBtn.disabled = false;
             }
         });
 
+        // --- Signup Button Handler ---
         signupBtn.addEventListener("click", async () => {
             const email = signupEmailInput.value.trim();
             const password = signupPasswordInput.value.trim();
@@ -395,29 +483,43 @@
                 return;
             }
 
+            // Show Spinner and Disable Button
+            signupBtn.classList.add('hidden');
+            signupSpinner.classList.remove('hidden');
+            signupBtn.disabled = true;
+
             try {
-                const userCredential = await signUpUser(email, password);
+                const userCredential = await signUpUser(email, password); // Use the wrapper function
                 const uid = userCredential.user.uid;
 
+                // Create user document in Firestore with default isAdmin: false
+                // This is for initial user data, custom claims are set on the backend.
                 try {
-                console.log("Creating user doc...");
-                await setDoc(doc(db, "users", uid), {
-                    email: email,
-                    isAdmin: false
-                });
-                console.log("User doc created!");
-                } catch (err) {
-                console.error("Error writing to Firestore:", err);
+                    await setDoc(doc(db, "users", uid), {
+                        email: email,
+                        isAdmin: false // New users are NOT admins by default
+                    });
+                    showMessage("Account created successfully! Please login.", "success");
+                    showLoginLink.click(); // Go back to login form
+                } catch (firestoreError) {
+                    console.error("Error writing to Firestore:", firestoreError);
+                    showMessage("Account created, but failed to save user data. Please contact support.", "warning");
+                    // Optionally, you might want to sign out the user here if data persistence is critical
+                    // await signOutUser();
                 }
 
-                showMessage("Account created successfully! Please login.", "success");
-                showLoginLink.click(); // Go back to login form
             } catch (error) {
-                showMessage(error.message, "danger");
+                // Use getFirebaseErrorMessage for consistent error messages
+                showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
+            } finally {
+                // Always hide spinner and enable button after operation
+                signupSpinner.classList.add('hidden');
+                signupBtn.classList.remove('hidden');
+                signupBtn.disabled = false;
             }
         });
 
-
+        // --- Forgot Password Handler ---
         if (forgotPasswordLink) {
             forgotPasswordLink.addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -429,31 +531,68 @@
                 }
 
                 try {
-                    await sendPasswordResetEmail(auth, email);
+                    await sendPasswordReset(email); // Use the wrapper function
                     showMessage("Password reset email sent! Check your inbox.", "success");
                 } catch (error) {
-                    let errorMessage = "Failed to send password reset email. Please try again.";
-                    if (error.code === 'auth/user-not-found') {
-                        errorMessage = "No account found with that email address.";
-                    } else if (error.code === 'auth/invalid-email') {
-                        errorMessage = "Please enter a valid email address.";
-                    }
-                    showMessage(errorMessage, "danger");
+                    // Use getFirebaseErrorMessage for consistent error messages
+                    showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
                 }
             });
         }
 
-        onAuthStateChanged(auth, (user) => {
+        // --- Main Authentication State Listener (Optimized) ---
+        // This is the core of your authentication flow, handling initial load and all state changes.
+        onAuthStateChanged(auth, async (user) => {
+            // Hide the full page loader once authentication state is determined
+            if (fullPageLoader) {
+                fullPageLoader.classList.add('hidden');
+            }
+            // Show the auth container (login/signup forms)
+            if (authContainer) {
+                authContainer.style.display = 'block';
+            }
+
             if (user) {
-                console.log("User is already logged in:", user.uid);
-                window.location.href = "./portal/dashboard.html";
+                console.log("User is logged in:", user.uid, user.email);
+
+                // --- Crucial: Fetch custom claims for admin status ---
+                let isAdmin = false;
+                try {
+                    const idTokenResult = await user.getIdTokenResult(true); // Force refresh token
+                    isAdmin = idTokenResult.claims.admin === true;
+                    console.log("User custom claims:", idTokenResult.claims);
+                    console.log("Is Admin (from claims):", isAdmin);
+                } catch (error) {
+                    console.error("Error getting ID token result for claims:", error);
+                    // Fallback: If claims cannot be fetched, assume not admin for safety
+                    isAdmin = false;
+                }
+
+                // Determine target URL based on admin status
+                let targetUrl = "./portal/dashboard.html"; // Default for regular users
+                if (isAdmin) {
+                    targetUrl = "https://jiecep.sanity.studio/structure/event;ce09e0c7-2da8-4706-915c-ec19795aca7b"; // Admin URL
+                }
+
+                // Redirect only if not already on the target page
+                if (!window.location.href.includes(targetUrl)) {
+                    window.location.href = targetUrl;
+                }
+                // If already on the target page, no redirect needed. The page content
+                // will be handled by the respective dashboard/admin page.
+                // For this login page, we simply stay here if already on the correct page,
+                // but usually, you'd want to ensure the user is redirected away from login.
+                // Since this is the login page, we want to redirect *away* from it if logged in.
+                // The above `if (!window.location.href.includes(targetUrl))` handles this.
+
             } else {
                 console.log("No user logged in.");
+                // Ensure login form is visible by default when no user is logged in
+                loginForm.style.display = "block";
+                signupForm.style.display = "none";
+                authTitle.textContent = "Login"; // Set initial title
             }
         });
-
-
-
     </script>
 </body>
 </html>
