@@ -1,6 +1,8 @@
 // js/auth.js
 
 // Import auth object from firebase-init.js
+import { db } from './firebase-init.js';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth } from "./firebase-init.js";
 import {
     createUserWithEmailAndPassword,
@@ -13,16 +15,23 @@ import {
  * @param {string} email - The user's email.
  * @param {string} password - The user's password.
  * @returns {Promise<UserCredential>} A promise that resolves with UserCredential on success.
- * @throws {FirebaseError} If signup fails.
+ * @throws {Error} If signup fails.
  */
 async function signUpUser(email, password) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("User signed up:", userCredential.user.email);
+        const user = userCredential.user;
+        console.log("User signed up:", user.email);
+
+        // Store user in Firestore with default role
+        await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            role: "user"
+        });
+
         return userCredential;
     } catch (error) {
         console.error("Error signing up:", error);
-        // You can add custom error handling logic here based on error.code
         throw new Error(getFirebaseErrorMessage(error.code) || "Sign up failed. Please try again.");
     }
 }
@@ -32,7 +41,7 @@ async function signUpUser(email, password) {
  * @param {string} email - The user's email.
  * @param {string} password - The user's password.
  * @returns {Promise<UserCredential>} A promise that resolves with UserCredential on success.
- * @throws {FirebaseError} If signin fails.
+ * @throws {Error} If signin fails.
  */
 async function signInUser(email, password) {
     try {
@@ -45,18 +54,15 @@ async function signInUser(email, password) {
     }
 }
 
-
-
 /**
  * Signs out the current user.
  * @returns {Promise<void>} A promise that resolves when sign-out is complete.
- * @throws {FirebaseError} If sign-out fails.
+ * @throws {Error} If sign-out fails.
  */
 async function signOutUser() {
     try {
         await signOut(auth);
         console.log("User signed out.");
-        // Redirect to the root index.html page after sign out
         window.location.href = "/index.html";
     } catch (error) {
         console.error("Error signing out:", error);
@@ -92,5 +98,5 @@ function getFirebaseErrorMessage(code) {
     }
 }
 
-// Export all functions, including the new Google sign-in one
-export { signUpUser, signInUser, signInWithGoogle, signOutUser };
+// Export all functions
+export { signUpUser, signInUser, signOutUser };
