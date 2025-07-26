@@ -157,6 +157,17 @@
             }
         }
 
+        /* Customize the Bootstrap switch for a blue theme */
+        .form-check-input:checked {
+        background-color: #0d6efd; /* Bootstrap primary blue */
+        border-color: #0d6efd;
+        }
+
+        .form-check-input:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+
         /* Google Button Styles */
         .btn-google {
             background-color: #4285F4; /* Google Blue */
@@ -195,19 +206,16 @@
                     <i class="fas fa-eye-slash"></i>
                 </button>
             </div>
-            <a href="#" id="forgotPasswordLink" class="d-block text-end mb-4 toggle-link">Forgot Password?</a>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check form-switch mb-4 text-start">
+                        <input class="form-check-input" type="checkbox" role="switch" id="adminLoginToggle">
+                        <label class="form-check-label" for="adminLoginToggle">Admin</label>
+                </div>
+                <a href="#" id="forgotPasswordLink" class="d-block text-end mb-4 toggle-link">Forgot Password?</a>
+            </div>  
             <button id="loginBtn" class="btn btn-primary w-100 mb-3">Login</button>
             <p>Don't have an account? <a href="#" id="showSignup" class="toggle-link">Sign Up</a></p>
 
-            <!-- OR Separator and Google Button for Login Form -->
-            <div class="d-flex align-items-center my-4">
-                <hr class="flex-grow-1">
-                <span class="mx-2 text-muted">OR</span>
-                <hr class="flex-grow-1">
-            </div>
-            <button id="google-signin-btn-login" class="btn btn-google w-100 mb-3">
-                <i class="fab fa-google"></i> Sign in with Google
-            </button>
         </div>
 
         <div id="signupForm" style="display: none;">
@@ -227,16 +235,6 @@
             <button id="signupBtn" class="btn btn-primary w-100 mb-3">Sign Up</button>
             <p>Already have an account? <a href="#" id="showLogin" class="toggle-link">Login</a></p>
 
-            <!-- OR Separator and Google Button for Signup Form -->
-            <div class="d-flex align-items-center my-4">
-                <hr class="flex-grow-1">
-                <span class="mx-2 text-muted">OR</span>
-                <hr class="flex-grow-1">
-            </div>
-            <button id="google-signin-btn-signup" class="btn btn-google w-100 mb-3">
-                <i class="fab fa-google"></i> Sign up with Google
-            </button>
-        </div>
     </div>
 
     <!-- Bootstrap JS Bundle -->
@@ -247,7 +245,7 @@
         // Import necessary authentication functions from auth.js
         // NOTE: Adjust these paths if your file structure is different.
         // Assuming 'auth.js' and 'firebase-init.js' are in a 'js' folder relative to this HTML.
-        import { signInUser, signUpUser, signInWithGoogle } from "./src/auth";
+        import { signInUser, signUpUser } from "./src/auth";
         import { auth } from "./src/firebase-init.js";
         import { onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
@@ -464,28 +462,6 @@
             });
         } 
 
-        // Google Sign-In Event Listeners
-        if (googleSignInBtnLogin) {
-            googleSignInBtnLogin.addEventListener('click', async () => {
-                try {
-                    await signInWithGoogle();
-                    // If successful, onAuthStateChanged will handle the redirect
-                } catch (error) {
-                    showMessage(error.message, "danger");
-                }
-            });
-        }
-
-        if (googleSignInBtnSignup) {
-            googleSignInBtnSignup.addEventListener('click', async () => {
-                try {
-                    await signInWithGoogle();
-                    // If successful, onAuthStateChanged will handle the redirect
-                } catch (error) {
-                    showMessage(error.message, "danger");
-                }
-            });
-        }
 
         // Optional: Check auth state on load (e.g., if user is already logged in)
         onAuthStateChanged(auth, (user) => {
@@ -498,6 +474,19 @@
                 console.log("No user logged in.");
             }
         });
+
+        document.getElementById("loginBtn").addEventListener("click", () => {
+            const isAdmin = document.getElementById("adminLoginToggle").checked;
+
+            if (isAdmin) {
+                console.log("Logging in as Admin");
+                // redirect to Sanity or use this flag as needed
+            } else {
+                console.log("Logging in as User");
+                // standard login flow
+            }
+        });
+
     </script>
 </body>
 </html>
