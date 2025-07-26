@@ -17,27 +17,37 @@ import {
  * @returns {Promise<import("firebase/auth").UserCredential>} A promise that resolves with UserCredential on success.
  * @throws {Error} If signup fails.
  */
-async function signUpUser(email, password) { // Removed 'export' here
+async function signUpUser(email, password) {
     try {
+        console.log("signUpUser: Attempting to create user with email:", email);
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log("User signed up:", user.email);
+        console.log("signUpUser: User signed up successfully. UID:", user.uid, "Email:", user.email);
 
-        
-        // Store user in Firestore with default role
-        // Note: For actual admin roles, use Firebase Custom Claims via Cloud Functions.
-        // This 'role' in Firestore is for general user data/profiles.
+        // --- Debugging Firestore Write ---
+        console.log("signUpUser: Attempting to write user document to Firestore.");
+        console.log("signUpUser: db object:", db); // Check if db is defined
+        console.log("signUpUser: user.uid:", user.uid); // Check user.uid
+
+        if (!db) {
+            console.error("signUpUser: Firestore 'db' object is undefined!");
+            throw new Error("Firestore not initialized correctly.");
+        }
+        if (!user.uid) {
+            console.error("signUpUser: User UID is undefined!");
+            throw new Error("User UID missing after signup.");
+        }
+
         await setDoc(doc(db, "users", user.uid), {
             email: user.email,
             role: "user" // Default role for new sign-ups
         });
+        console.log("signUpUser: User document write to Firestore initiated successfully.");
 
         return userCredential;
     } catch (error) {
-        console.error("Error signing up:", error);
-        // Re-throw the original error to be caught by the calling function (e.g., in index.html)
-        // This allows index.html's showMessage to use its own error handling/mapping.
-        throw error;
+        console.error("signUpUser: Error during signup or Firestore write:", error);
+        throw error; // Re-throw the original error
     }
 }
 
@@ -48,13 +58,14 @@ async function signUpUser(email, password) { // Removed 'export' here
  * @returns {Promise<import("firebase/auth").User>} A promise that resolves with the User object on success.
  * @throws {Error} If signin fails.
  */
-async function signInUser(email, password) { // Removed 'export' here
+async function signInUser(email, password) {
     try {
+        console.log("signInUser: Attempting to sign in user with email:", email);
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("User signed in:", userCredential.user.email);
+        console.log("signInUser: User signed in successfully. Email:", userCredential.user.email);
         return userCredential.user; // Return the User object directly
     } catch (error) {
-        console.error("Error signing in:", error);
+        console.error("signInUser: Error during signin:", error);
         throw error; // Re-throw the original error
     }
 }
@@ -64,13 +75,13 @@ async function signInUser(email, password) { // Removed 'export' here
  * @returns {Promise<void>} A promise that resolves when sign-out is complete.
  * @throws {Error} If sign-out fails.
  */
-async function signOutUser() { // Removed 'export' here
+async function signOutUser() {
     try {
+        console.log("signOutUser: Attempting to sign out.");
         await signOut(auth);
-        console.log("User signed out.");
-        // DO NOT redirect here. Let onAuthStateChanged listener in index.html handle routing.
+        console.log("signOutUser: User signed out.");
     } catch (error) {
-        console.error("Error signing out:", error);
+        console.error("signOutUser: Error signing out:", error);
         throw error; // Re-throw the original error
     }
 }
@@ -81,22 +92,23 @@ async function signOutUser() { // Removed 'export' here
  * @returns {Promise<void>} A promise that resolves when the email is sent.
  * @throws {Error} If sending the email fails.
  */
-async function sendPasswordReset(email) { // Removed 'export' here
+async function sendPasswordReset(email) {
     try {
+        console.log("sendPasswordReset: Attempting to send reset email to:", email);
         await sendPasswordResetEmail(auth, email);
+        console.log("sendPasswordReset: Password reset email sent.");
     } catch (error) {
-        console.error("Error sending password reset email:", error);
+        console.error("sendPasswordReset: Error sending password reset email:", error);
         throw error; // Re-throw the original error
     }
 }
 
 /**
  * Helper function to provide user-friendly Firebase error messages.
- * This function will now be used directly by showMessage in index.html for consistency.
  * @param {string} code - Firebase error code.
  * @returns {string} User-friendly error message.
  */
-function getFirebaseErrorMessage(code) { // Removed 'export' here
+async function getFirebaseErrorMessage(code) {
     switch (code) {
         case 'auth/email-already-in-use':
             return 'The email address is already in use by another account.';

@@ -462,7 +462,7 @@
             }
         });
 
-        // --- Signup Button Handler ---
+       // --- Signup Button Handler ---
         signupBtn.addEventListener("click", async () => {
             const email = signupEmailInput.value.trim();
             const password = signupPasswordInput.value.trim();
@@ -489,26 +489,31 @@
             signupBtn.disabled = true;
 
             try {
+                console.log("index.html: Calling signUpUser...");
                 const userCredential = await signUpUser(email, password); // Use the wrapper function
                 const uid = userCredential.user.uid;
+                console.log("index.html: signUpUser returned. User UID:", uid);
 
                 // Create user document in Firestore with default isAdmin: false
                 // This is for initial user data, custom claims are set on the backend.
                 try {
+                    console.log("index.html: Attempting to set Firestore doc for UID:", uid);
                     await setDoc(doc(db, "users", uid), {
                         email: email,
                         isAdmin: false // New users are NOT admins by default
                     });
+                    console.log("index.html: Firestore doc set successfully.");
                     showMessage("Account created successfully! Please login.", "success");
                     showLoginLink.click(); // Go back to login form
                 } catch (firestoreError) {
-                    console.error("Error writing to Firestore:", firestoreError);
+                    console.error("index.html: Error writing to Firestore:", firestoreError);
                     showMessage("Account created, but failed to save user data. Please contact support.", "warning");
                     // Optionally, you might want to sign out the user here if data persistence is critical
                     // await signOutUser();
                 }
 
             } catch (error) {
+                console.error("index.html: Error during signup process:", error); // Log the full error
                 // Use getFirebaseErrorMessage for consistent error messages
                 showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
             } finally {
@@ -518,6 +523,7 @@
                 signupBtn.disabled = false;
             }
         });
+
 
         // --- Forgot Password Handler ---
         if (forgotPasswordLink) {
