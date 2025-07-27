@@ -288,78 +288,90 @@
             }
         }
 
-        // --- Authentication State Listener for this page ---
-        onAuthStateChanged(auth, async (user) => {
-            // Hide the full page loader once authentication state is determined
+        // --- Main script logic, wrapped in DOMContentLoaded ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide the full page loader and show auth container immediately
+            // This is a fallback in case onAuthStateChanged takes longer or doesn't fire
             if (fullPageLoader) {
                 fullPageLoader.classList.add('hidden');
             }
-            // Show the auth container (this page's content)
             if (authContainer) {
                 authContainer.style.display = 'block';
             }
 
-            if (user) {
-                console.log("User is logged in on verification page:", user.uid, user.email);
-
-                // Force reload user data to get the latest emailVerified status
-                try {
-                    await reload(user);
-                    console.log("User emailVerified status (after reload):", user.emailVerified);
-
-                    if (user.emailVerified) {
-                        console.log("Email is now verified. Redirecting to dashboard.");
-                        // Email is verified, redirect to dashboard
-                        window.location.href = "./portal/dashboard.html"; // Adjust to your actual dashboard path
-                    }
-                    // If not verified, stay on this page and allow resend/back to login
-                } catch (error) {
-                    console.error("Error reloading user or checking email verification status:", error);
-                    showMessage("Could not check verification status. Please try again.", "danger");
+            // --- Authentication State Listener for this page ---
+            onAuthStateChanged(auth, async (user) => {
+                // The loader should already be hidden by the DOMContentLoaded block
+                // but this ensures it's hidden if somehow it wasn't.
+                if (fullPageLoader) {
+                    fullPageLoader.classList.add('hidden');
                 }
-            } else {
-                console.log("No user logged in on verification page. Redirecting to login.");
-                // If no user is logged in, redirect them to the main login page
-                window.location.href = "./index.html"; // Adjust to your main login page
-            }
-        });
+                if (authContainer) {
+                    authContainer.style.display = 'block';
+                }
 
-        // --- Resend Verification Email Button Handler ---
-        resendVerificationBtn.addEventListener("click", async () => {
-            const user = auth.currentUser;
-            if (user) {
-                // Show spinner and disable button
-                resendVerificationBtn.disabled = true;
-                resendSpinner.classList.remove('hidden');
+                if (user) {
+                    console.log("User is logged in on verification page:", user.uid, user.email);
 
-                try {
-                    await sendEmailVerification(user);
-                    showMessage("Verification email resent! Please check your inbox (and spam folder).", "success");
-                    // Re-enable button after a delay to prevent spamming
-                    setTimeout(() => {
+                    // Force reload user data to get the latest emailVerified status
+                    try {
+                        await reload(user);
+                        console.log("User emailVerified status (after reload):", user.emailVerified);
+
+                        if (user.emailVerified) {
+                            console.log("Email is now verified. Redirecting to dashboard.");
+                            // Email is verified, redirect to dashboard
+                            window.location.href = "./portal/dashboard.html"; // Adjust to your actual dashboard path
+                        }
+                        // If not verified, stay on this page and allow resend/back to login
+                    } catch (error) {
+                        console.error("Error reloading user or checking email verification status:", error);
+                        showMessage("Could not check verification status. Please try again.", "danger");
+                    }
+                } else {
+                    console.log("No user logged in on verification page. Redirecting to login.");
+                    // If no user is logged in, redirect them to the main login page
+                    window.location.href = "./index.html"; // Adjust to your main login page
+                }
+            });
+
+            // --- Resend Verification Email Button Handler ---
+            resendVerificationBtn.addEventListener("click", async () => {
+                const user = auth.currentUser;
+                if (user) {
+                    // Show spinner and disable button
+                    resendVerificationBtn.disabled = true;
+                    resendSpinner.classList.remove('hidden');
+
+                    try {
+                        await sendEmailVerification(user);
+                        showMessage("Verification email resent! Please check your inbox (and spam folder).", "success");
+                        // Re-enable button after a delay to prevent spamming
+                        setTimeout(() => {
+                            resendVerificationBtn.disabled = false;
+                            resendSpinner.classList.add('hidden');
+                        }, 60000); // 1 minute delay
+                    } catch (error) {
+                        console.error("Error resending verification email:", error);
+                        showMessage(getFirebaseErrorMessage(error.code) || "Failed to resend verification email. Please try again.", "danger");
+                        // Re-enable button immediately on error
                         resendVerificationBtn.disabled = false;
                         resendSpinner.classList.add('hidden');
-                    }, 60000); // 1 minute delay
-                } catch (error) {
-                    console.error("Error resending verification email:", error);
-                    showMessage(getFirebaseErrorMessage(error.code) || "Failed to resend verification email. Please try again.", "danger");
-                    // Re-enable button immediately on error
-                    resendVerificationBtn.disabled = false;
-                    resendSpinner.classList.add('hidden');
+                    }
+                } else {
+                    showMessage("No user is currently logged in. Please log in to resend verification.", "warning");
+                    // Optionally redirect to login if no user
+                    setTimeout(() => {
+                        window.location.href = "./index.html";
+                    }, 3000);
                 }
-            } else {
-                showMessage("No user is currently logged in. Please log in to resend verification.", "warning");
-                // Optionally redirect to login if no user
-                setTimeout(() => {
-                    window.location.href = "./index.html";
-                }, 3000);
-            }
-        });
+            });
 
-        // --- Back to Login Button Handler ---
-        backToLoginBtn.addEventListener("click", () => {
-            window.location.href = "./index.html"; // Redirect to your main login page
-        });
+            // --- Back to Login Button Handler ---
+            backToLoginBtn.addEventListener("click", () => {
+                window.location.href = "./index.html"; // Redirect to your main login page
+            });
+        }); // End DOMContentLoaded
     </script>
     <!-- Bootstrap JS for dismissible alerts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
