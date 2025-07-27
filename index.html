@@ -551,6 +551,8 @@
         }
 
         // --- Main Authentication State Listener (Optimized) ---
+// This is the core of your authentication flow, handling initial load and all state changes.
+// --- Main Authentication State Listener (Optimized) ---
         // This is the core of your authentication flow, handling initial load and all state changes.
         onAuthStateChanged(auth, async (user) => {
             // Hide the full page loader once authentication state is determined
@@ -565,26 +567,19 @@
             if (user) {
                 console.log("User is logged in:", user.uid, user.email);
 
-                // --- NEW: Email Verification Check ---
-                // Force refresh user data to get the latest emailVerified status
-                await user.reload(); // This is crucial to ensure 'emailVerified' is up-to-date
-                console.log("User emailVerified status (after reload):", user.emailVerified);
+                // Removed: Email Verification Check
+                // await user.reload();
+                // console.log("User emailVerified status (after reload):", user.emailVerified);
+                // if (!user.emailVerified) {
+                //     console.warn("User email is NOT verified. Redirecting to verification required page.");
+                //     showMessage("Please verify your email address to access your account. A verification link has been sent to your inbox. Check your spam folder if you don't see it!", "warning");
+                //     if (!window.location.href.includes("email-not-verified.html")) {
+                //         window.location.href = "./email-not-verified.html";
+                //     }
+                //     return;
+                // }
 
-                if (!user.emailVerified) {
-                    console.warn("User email is NOT verified. Redirecting to verification required page.");
-                    // Hide the main content and show a message
-                    // You might have a dedicated HTML element for this message
-                    showMessage("Please verify your email address to access your account. A verification link has been sent to your inbox. Check your spam folder if you don't see it!", "warning");
-
-                    // Optionally, sign them out or redirect to a specific 'email-not-verified.html' page
-                    // If you want to force them to a verification page:
-                    if (!window.location.href.includes("email-not-verified.html")) { // Prevent infinite redirect
-                        window.location.href = "./email-not-verified.html"; // Create this new page
-                    }
-                    return; // Stop further execution for unverified users
-                }
-
-                // --- Crucial: Fetch custom claims for admin status (only if email is verified) ---
+                // --- Crucial: Fetch custom claims for admin status ---
                 let isAdmin = false;
                 try {
                     const idTokenResult = await user.getIdTokenResult(true); // Force refresh token
@@ -611,7 +606,7 @@
                 const isAuthPage = currentPage.endsWith("/") || currentPage.endsWith("/index.html") || currentPage.includes("login.html") || currentPage.includes("signup.html"); // Adjust these based on your actual auth page names
 
                 if (isAuthPage) {
-                    // Redirect if on the auth page and email is verified
+                    // Redirect if on the auth page
                     if (!currentPage.includes(targetUrl.replace("./", "/"))) { // Basic check to avoid redirect loop if targetUrl is relative
                         window.location.href = targetUrl;
                     }

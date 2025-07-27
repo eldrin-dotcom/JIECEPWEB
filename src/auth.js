@@ -8,7 +8,6 @@ import {
     signInWithEmailAndPassword,
     signOut,
     sendPasswordResetEmail,
-    sendEmailVerification
 } from "firebase/auth";
 
 /**
@@ -30,10 +29,6 @@ async function signUpUser(email, password) {
         console.log("signUpUser: db object:", db); // Check if db is defined
         console.log("signUpUser: user.uid:", user.uid); // Check user.uid
 
-         // 2. Send email verification
-        console.log("signUpUser: Sending email verification to:", user.email);
-        await sendEmailVerification(user);
-        console.log("signUpUser: Email verification sent successfully.");
 
         if (!db) {
             console.error("signUpUser: Firestore 'db' object is undefined!");
