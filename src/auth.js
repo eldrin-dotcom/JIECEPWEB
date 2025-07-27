@@ -7,7 +7,8 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    sendEmailVerification
 } from "firebase/auth";
 
 /**
@@ -29,6 +30,11 @@ async function signUpUser(email, password) {
         console.log("signUpUser: db object:", db); // Check if db is defined
         console.log("signUpUser: user.uid:", user.uid); // Check user.uid
 
+         // 2. Send email verification
+        console.log("signUpUser: Sending email verification to:", user.email);
+        await sendEmailVerification(user);
+        console.log("signUpUser: Email verification sent successfully.");
+
         if (!db) {
             console.error("signUpUser: Firestore 'db' object is undefined!");
             throw new Error("Firestore not initialized correctly.");
@@ -40,7 +46,8 @@ async function signUpUser(email, password) {
 
         await setDoc(doc(db, "users", user.uid), {
             email: user.email,
-            role: "user" // Default role for new sign-ups
+            role: "user", // Default role for new sign-ups
+            emailVerified: user.emailVerified
         });
         console.log("signUpUser: User document write to Firestore initiated successfully.");
 

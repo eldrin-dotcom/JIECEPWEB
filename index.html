@@ -462,69 +462,73 @@
             }
         });
 
-       // --- Signup Button Handler ---
-        signupBtn.addEventListener("click", async () => {
-            const email = signupEmailInput.value.trim();
-            const password = signupPasswordInput.value.trim();
-            const confirmPassword = confirmPasswordInput.value.trim();
+      // --- Signup Button Handler ---
+            signupBtn.addEventListener("click", async () => {
+                const email = signupEmailInput.value.trim();
+                const password = signupPasswordInput.value.trim();
+                const confirmPassword = confirmPasswordInput.value.trim();
 
-            if (!email || !password || !confirmPassword) {
-                showMessage("Please fill in all fields.", "danger");
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showMessage("Passwords do not match.", "danger");
-                return;
-            }
-
-            if (password.length < 6) {
-                showMessage("Password should be at least 6 characters.", "danger");
-                return;
-            }
-
-            // Show Spinner and Disable Button
-            signupBtn.classList.add('hidden');
-            signupSpinner.classList.remove('hidden');
-            signupBtn.disabled = true;
-
-            try {
-                console.log("index.html: Calling signUpUser...");
-                const userCredential = await signUpUser(email, password); // Use the wrapper function
-                const uid = userCredential.user.uid;
-                console.log("index.html: signUpUser returned. User UID:", uid);
-
-                // Create user document in Firestore with default isAdmin: false
-                // This is for initial user data, custom claims are set on the backend.
-                try {
-                    console.log("index.html: Attempting to set Firestore doc for UID:", uid);
-                    await setDoc(doc(db, "users", uid), {
-                        email: email,
-                        isAdmin: false // New users are NOT admins by default
-                    });
-                    console.log("index.html: Firestore doc set successfully.");
-                    showMessage("Account created successfully! Please login.", "success");
-                    showLoginLink.click(); // Go back to login form
-                } catch (firestoreError) {
-                    console.error("index.html: Error writing to Firestore:", firestoreError);
-                    showMessage("Account created, but failed to save user data. Please contact support.", "warning");
-                    // Optionally, you might want to sign out the user here if data persistence is critical
-                    // await signOutUser();
+                if (!email || !password || !confirmPassword) {
+                    showMessage("Please fill in all fields.", "danger");
+                    return;
                 }
 
-            } catch (error) {
-                console.error("index.html: Error during signup process:", error); // Log the full error
-                // Use getFirebaseErrorMessage for consistent error messages
-                showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
-            } finally {
-                // Always hide spinner and enable button after operation
-                signupSpinner.classList.add('hidden');
-                signupBtn.classList.remove('hidden');
-                signupBtn.disabled = false;
-            }
-        });
+                if (password !== confirmPassword) {
+                    showMessage("Passwords do not match.", "danger");
+                    return;
+                }
 
+                if (password.length < 6) {
+                    showMessage("Password should be at least 6 characters.", "danger");
+                    return;
+                }
 
+                // Show Spinner and Disable Button
+                signupBtn.classList.add('hidden');
+                signupSpinner.classList.remove('hidden');
+                signupBtn.disabled = true;
+
+                try {
+                    console.log("index.html: Calling signUpUser...");
+                    const userCredential = await signUpUser(email, password); // Use the wrapper function
+                    const user = userCredential.user; // Get the user object
+                    const uid = user.uid;
+                    console.log("index.html: signUpUser returned. User UID:", uid);
+
+                    // --- NEW: Send Email Verification ---
+                    console.log("index.html: Sending email verification...");
+                    await user.sendEmailVerification(); // This sends the verification email
+                    console.log("index.html: Email verification sent successfully.");
+
+                    showMessage("Account created successfully! Please check your email for a verification link.", "success");
+                    // showLoginLink.click(); // You might want to remove this line if you want the user to stay on a 'check your email' screen
+
+                    // Create user document in Firestore with default isAdmin: false
+                    try {
+                        console.log("index.html: Attempting to set Firestore doc for UID:", uid);
+                        await setDoc(doc(db, "users", uid), {
+                            email: email,
+                            isAdmin: false, // New users are NOT admins by default
+                            // You might also add a 'isEmailVerified' field, though Firebase Auth tracks this
+                            isEmailVerified: user.emailVerified // Will be false initially
+                        });
+                        console.log("index.html: Firestore doc set successfully.");
+                        // showMessage("Account created successfully! Please login.", "success"); // This message will now be less prominent than the verification message
+                        showLoginLink.click(); // Go back to login form (or a specific 'check email' page)
+                    } catch (firestoreError) {
+                        console.error("index.html: Error writing to Firestore:", firestoreError);
+                        showMessage("Account created, but failed to save user data. Please contact support.", "warning");
+                    }
+
+                } catch (error) {
+                    console.error("index.html: Error during signup process:", error);
+                    showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
+                } finally {
+                    signupSpinner.classList.add('hidden');
+                    signupBtn.classList.remove('hidden');
+                    signupBtn.disabled = false;
+                }
+            });
         // --- Forgot Password Handler ---
         if (forgotPasswordLink) {
             forgotPasswordLink.addEventListener('click', async (e) => {
@@ -561,7 +565,26 @@
             if (user) {
                 console.log("User is logged in:", user.uid, user.email);
 
-                // --- Crucial: Fetch custom claims for admin status ---
+                // --- NEW: Email Verification Check ---
+                // Force refresh user data to get the latest emailVerified status
+                await user.reload(); // This is crucial to ensure 'emailVerified' is up-to-date
+                console.log("User emailVerified status (after reload):", user.emailVerified);
+
+                if (!user.emailVerified) {
+                    console.warn("User email is NOT verified. Redirecting to verification required page.");
+                    // Hide the main content and show a message
+                    // You might have a dedicated HTML element for this message
+                    showMessage("Please verify your email address to access your account. A verification link has been sent to your inbox. Check your spam folder if you don't see it!", "warning");
+
+                    // Optionally, sign them out or redirect to a specific 'email-not-verified.html' page
+                    // If you want to force them to a verification page:
+                    if (!window.location.href.includes("email-not-verified.html")) { // Prevent infinite redirect
+                        window.location.href = "./email-not-verified.html"; // Create this new page
+                    }
+                    return; // Stop further execution for unverified users
+                }
+
+                // --- Crucial: Fetch custom claims for admin status (only if email is verified) ---
                 let isAdmin = false;
                 try {
                     const idTokenResult = await user.getIdTokenResult(true); // Force refresh token
@@ -581,15 +604,20 @@
                 }
 
                 // Redirect only if not already on the target page
-                if (!window.location.href.includes(targetUrl)) {
-                    window.location.href = targetUrl;
+                // And importantly, only redirect if the current page IS the login/signup page (index.html)
+                // or a generic landing page that authenticated users shouldn't be on.
+                // This prevents re-redirecting if they are already on dashboard/admin.
+                const currentPage = window.location.pathname;
+                const isAuthPage = currentPage.endsWith("/") || currentPage.endsWith("/index.html") || currentPage.includes("login.html") || currentPage.includes("signup.html"); // Adjust these based on your actual auth page names
+
+                if (isAuthPage) {
+                    // Redirect if on the auth page and email is verified
+                    if (!currentPage.includes(targetUrl.replace("./", "/"))) { // Basic check to avoid redirect loop if targetUrl is relative
+                        window.location.href = targetUrl;
+                    }
                 }
-                // If already on the target page, no redirect needed. The page content
-                // will be handled by the respective dashboard/admin page.
-                // For this login page, we simply stay here if already on the correct page,
-                // but usually, you'd want to ensure the user is redirected away from login.
-                // Since this is the login page, we want to redirect *away* from it if logged in.
-                // The above `if (!window.location.href.includes(targetUrl))` handles this.
+                // If already on the target page (dashboard/admin), no redirect needed.
+                // The respective page content will be handled there.
 
             } else {
                 console.log("No user logged in.");
@@ -597,6 +625,16 @@
                 loginForm.style.display = "block";
                 signupForm.style.display = "none";
                 authTitle.textContent = "Login"; // Set initial title
+
+                // If the user is not logged in AND they are on a protected page (dashboard, admin),
+                // redirect them back to the login page.
+                const currentPage = window.location.pathname;
+                const protectedPages = ["/portal/dashboard.html", "/sanity.studio"]; // Add more as needed
+                const isProtectedPage = protectedPages.some(path => currentPage.includes(path));
+
+                if (isProtectedPage && !currentPage.endsWith("index.html")) { // Don't redirect if already on index.html
+                    window.location.href = "./index.html"; // Or your main login page
+                }
             }
         });
     </script>
