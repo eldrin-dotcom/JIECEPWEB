@@ -1,4 +1,5 @@
-import { apps, initializeApp, credential as _credential, auth } from "firebase-admin";
+import pkg from 'firebase-admin';
+const { apps, initializeApp, credential: _credential, auth } = pkg;
 
 if (!apps.length) {
   initializeApp({
