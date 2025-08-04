@@ -1,6 +1,10 @@
 import * as admin from 'firebase-admin';
 
-if (!admin.apps.length) {
+// Check if a default app has already been initialized
+// A more robust way to handle this than checking .length on a potentially undefined array
+try {
+  admin.app();
+} catch (error) {
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
