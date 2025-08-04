@@ -1,8 +1,6 @@
-// Use a namespace import to get all exports from firebase-admin
 import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
-  // Use the admin namespace to access initializeApp and credential
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
@@ -26,7 +24,6 @@ export default async (req, res) => {
     let users = [];
     let nextPageToken = undefined;
     do {
-      // Use the admin namespace to access auth()
       const result = await admin.auth().listUsers(1000, nextPageToken);
       users = users.concat(result.users.map(u => ({
         uid: u.uid,
