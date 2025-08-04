@@ -2,15 +2,19 @@ import pkg from 'firebase-admin';
 const { apps, initializeApp, credential: _credential, auth } = pkg;
 
 if (!apps.length) {
+  const credentials = {
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  };
+
+  // Add this line to see what's being passed to the function
+  console.log('Firebase Credentials:', credentials);
+
   initializeApp({
-    credential: _credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-    })
+    credential: _credential.cert(credentials)
   });
 }
-
 export default async (req, res) => {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
