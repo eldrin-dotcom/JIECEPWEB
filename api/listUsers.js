@@ -1,20 +1,23 @@
 import * as admin from 'firebase-admin';
 
-// Check if a default app has already been initialized
-// A more robust way to handle this than checking .length on a potentially undefined array
-try {
-  admin.app();
-} catch (error) {
+// Ensure Firebase is initialized only once
+if (!admin.apps || !admin.apps.length) {
+  const { FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY } = process.env;
+
+  if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
+    throw new Error('Missing Firebase environment variables');
+  }
+
   admin.initializeApp({
     credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+      projectId: FIREBASE_PROJECT_ID,
+      clientEmail: FIREBASE_CLIENT_EMAIL,
+      privateKey: FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
     })
   });
 }
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -34,11 +37,11 @@ export default async (req, res) => {
         email: u.email,
         admin: u.customClaims?.admin === true
       })));
-      nextPageToken = result.pageToken;
+      nextPageToken = result.pageToken || undefined;
     } while (nextPageToken);
 
     res.status(200).json({ users });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message || String(error) });
   }
-};
+}
