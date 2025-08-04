@@ -1,6 +1,6 @@
-const admin = require("firebase-admin");
+import admin from "firebase-admin";
 
-if (!admin.apps || !admin.apps.length) {
+if (!admin.apps.length) {
   const { FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY } = process.env;
   if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
     throw new Error('Missing Firebase environment variables');
@@ -14,7 +14,7 @@ if (!admin.apps || !admin.apps.length) {
   });
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -41,4 +41,4 @@ module.exports = async (req, res) => {
     console.error("Error setting custom claims:", error);
     res.status(500).json({ error: error.message || String(error) });
   }
-};
+}
