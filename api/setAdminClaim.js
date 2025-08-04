@@ -1,11 +1,15 @@
 const admin = require("firebase-admin");
 
-if (!admin.apps.length) {
+if (!admin.apps || !admin.apps.length) {
+  const { FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY } = process.env;
+  if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
+    throw new Error('Missing Firebase environment variables');
+  }
   admin.initializeApp({
     credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+      projectId: FIREBASE_PROJECT_ID,
+      clientEmail: FIREBASE_CLIENT_EMAIL,
+      privateKey: FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
     })
   });
 }
@@ -25,9 +29,16 @@ module.exports = async (req, res) => {
     return;
   }
   try {
-    await admin.auth().setCustomUserClaims(uid, { admin: isAdmin !== false });
-    res.status(200).json({ message: `Admin claim ${isAdmin === false ? 'removed' : 'set'} for user: ${uid}` });
+    if (isAdmin === false) {
+      // Remove admin claim
+      await admin.auth().setCustomUserClaims(uid, {});
+      res.status(200).json({ message: `Admin claim removed for user: ${uid}` });
+    } else {
+      await admin.auth().setCustomUserClaims(uid, { admin: true });
+      res.status(200).json({ message: `Admin claim set for user: ${uid}` });
+    }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error setting custom claims:", error);
+    res.status(500).json({ error: error.message || String(error) });
   }
 };
