@@ -30,7 +30,6 @@ export default async function handler(req, res) {
   }
   try {
     if (isAdmin === false) {
-      // Remove admin claim
       await admin.auth().setCustomUserClaims(uid, {});
       res.status(200).json({ message: `Admin claim removed for user: ${uid}` });
     } else {
