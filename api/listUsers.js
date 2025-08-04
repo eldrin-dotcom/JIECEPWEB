@@ -1,15 +1,19 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 
-// Ensure Firebase is initialized only once
+const credential = admin.credential || (admin.default && admin.default.credential);
+
 if (!admin.apps || !admin.apps.length) {
   const { FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY } = process.env;
 
   if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
     throw new Error('Missing Firebase environment variables');
   }
+  if (!credential || !credential.cert) {
+    throw new Error('Firebase Admin SDK: credential property is undefined.');
+  }
 
   admin.initializeApp({
-    credential: admin.credential.cert({
+    credential: credential.cert({
       projectId: FIREBASE_PROJECT_ID,
       clientEmail: FIREBASE_CLIENT_EMAIL,
       privateKey: FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
