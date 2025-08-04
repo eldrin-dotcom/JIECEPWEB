@@ -1,30 +1,17 @@
-import pkg from 'firebase-admin';
-const { apps, initializeApp, credential: _credential, auth } = pkg;
+// Use a namespace import to get all exports from firebase-admin
+import * as admin from 'firebase-admin';
 
-if (!apps.length) {
-  const credentials = {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    // Ensure this key is correctly formatted with newlines
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-  };
-
-  // Log the credentials to the console for debugging
-  console.log('Firebase Credentials:', credentials);
-
-  // Check that the credential object and its cert method exist
-  if (!_credential || typeof _credential.cert !== 'function') {
-    console.error('Firebase Admin SDK credential object is not available.');
-    // Exit gracefully to prevent a crash
-    return;
-  }
-
-  initializeApp({
-    credential: _credential.cert(credentials)
+if (!admin.apps.length) {
+  // Use the admin namespace to access initializeApp and credential
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+    })
   });
 }
 
-// ... your endpoint code
 export default async (req, res) => {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -39,7 +26,8 @@ export default async (req, res) => {
     let users = [];
     let nextPageToken = undefined;
     do {
-      const result = await auth().listUsers(1000, nextPageToken);
+      // Use the admin namespace to access auth()
+      const result = await admin.auth().listUsers(1000, nextPageToken);
       users = users.concat(result.users.map(u => ({
         uid: u.uid,
         email: u.email,
