@@ -409,59 +409,49 @@
 
         // --- Login Button Handler ---
         loginBtn.addEventListener("click", async () => {
-            const email = loginEmailInput.value.trim();
-            const password = loginPasswordInput.value.trim();
-            const isAdminLoginAttempt = adminLoginToggle.checked; // User's intent to log in as admin
+    const email = loginEmailInput.value.trim();
+    const password = loginPasswordInput.value.trim();
+    const isAdminLoginAttempt = adminLoginToggle.checked;
 
-            if (!email || !password) {
-                showMessage("Please enter both email and password.", "danger");
-                return;
+    if (!email || !password) {
+        showMessage("Please enter both email and password.", "danger");
+        return;
+    }
+
+    // Show Spinner and Disable Button
+    loginBtn.classList.add('hidden');
+    loginSpinner.classList.remove('hidden');
+    loginBtn.disabled = true;
+
+    try {
+        const user = await signInUser(email, password);
+        const idTokenResult = await user.getIdTokenResult(true);
+        const userIsAdminClaim = idTokenResult.claims.admin === true;
+
+        if (userIsAdminClaim) {
+            // User is an admin
+            if (isAdminLoginAttempt) {
+                window.location.href = "https://jiecep.sanity.studio/structure/event;ce09e0c7-2da8-4706-915c-ec19795aca7b"; // Admin panel
+            } else {
+                window.location.href = "./portal/dashboard.html"; // Regular dashboard
             }
-
-            // Show Spinner and Disable Button
-            loginBtn.classList.add('hidden');
-            loginSpinner.classList.remove('hidden');
-            loginBtn.disabled = true; // Disable the button to prevent multiple clicks
-
-            try {
-                const user = await signInUser(email, password); // Use the wrapper function
-                const idTokenResult = await user.getIdTokenResult(true); // Force refresh token for latest claims
-                const userIsAdminClaim = idTokenResult.claims.admin === true;
-
-                // --- Role-based Redirection Logic ---
-                // This logic is now based on custom claims, which are more secure.
-                // The Firestore 'isAdmin' field is still used during signup for initial setup,
-                // but custom claims are the source of truth for runtime role checks.
-
-                if (isAdminLoginAttempt && userIsAdminClaim) {
-                    // User attempted admin login AND has admin claim
-                    window.location.href = "https://jiecep.sanity.studio/structure/event;ce09e0c7-2da8-4706-915c-ec19795aca7b";
-                } else if (!isAdminLoginAttempt && !userIsAdminClaim) {
-                    // User attempted regular login AND does NOT have admin claim
-                    window.location.href = "./portal/dashboard.html";
-                } else if (isAdminLoginAttempt && !userIsAdminClaim) {
-                    // User attempted admin login but does NOT have admin claim
-                    showMessage(getFirebaseErrorMessage('auth/permission-denied'), "danger"); // Use getFirebaseErrorMessage
-                    await signOutUser(); // Sign out the user immediately if they tried to log in as admin without permission
-                } else if (!isAdminLoginAttempt && userIsAdminClaim) {
-                    // User attempted regular login but HAS admin claim
-                    // This scenario might be okay, or you might want to redirect them to the admin panel
-                    // based on your app's policy. For now, we'll let them go to dashboard.
-                    // Or, you could force them to the admin panel:
-                    window.location.href = "https://jiecep.sanity.studio/structure/event;ce09e0c7-2da8-4706-915c-ec19795aca7b"; // Force admin to admin panel
-                }
-
-            } catch (error) {
-                // Use getFirebaseErrorMessage for consistent error messages
-                showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
-            } finally {
-                // Always hide spinner and enable button after operation
-                loginSpinner.classList.add('hidden');
-                loginBtn.classList.remove('hidden');
-                loginBtn.disabled = false;
+        } else {
+            // User is NOT an admin
+            if (isAdminLoginAttempt) {
+                showMessage(getFirebaseErrorMessage('auth/permission-denied'), "danger");
+                await signOutUser();
+            } else {
+                window.location.href = "./portal/dashboard.html";
             }
-        });
-
+        }
+    } catch (error) {
+        showMessage(getFirebaseErrorMessage(error.code) || error.message, "danger");
+    } finally {
+        loginSpinner.classList.add('hidden');
+        loginBtn.classList.remove('hidden');
+        loginBtn.disabled = false;
+    }
+});
       // --- Signup Button Handler ---
             signupBtn.addEventListener("click", async () => {
                 const email = signupEmailInput.value.trim();
