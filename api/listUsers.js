@@ -1,8 +1,8 @@
-const admin = require("firebase-admin");
+import { apps, initializeApp, credential as _credential, auth } from "firebase-admin";
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
+if (!apps.length) {
+  initializeApp({
+    credential: _credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
@@ -10,7 +10,7 @@ if (!admin.apps.length) {
   });
 }
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     let users = [];
     let nextPageToken = undefined;
     do {
-      const result = await admin.auth().listUsers(1000, nextPageToken);
+      const result = await auth().listUsers(1000, nextPageToken);
       users = users.concat(result.users.map(u => ({
         uid: u.uid,
         email: u.email,
