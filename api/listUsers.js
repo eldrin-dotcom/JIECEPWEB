@@ -5,16 +5,26 @@ if (!apps.length) {
   const credentials = {
     projectId: process.env.FIREBASE_PROJECT_ID,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    // Ensure this key is correctly formatted with newlines
     privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
   };
 
-  // Add this line to see what's being passed to the function
+  // Log the credentials to the console for debugging
   console.log('Firebase Credentials:', credentials);
+
+  // Check that the credential object and its cert method exist
+  if (!_credential || typeof _credential.cert !== 'function') {
+    console.error('Firebase Admin SDK credential object is not available.');
+    // Exit gracefully to prevent a crash
+    return;
+  }
 
   initializeApp({
     credential: _credential.cert(credentials)
   });
 }
+
+// ... your endpoint code
 export default async (req, res) => {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
