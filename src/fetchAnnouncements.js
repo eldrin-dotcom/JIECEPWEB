@@ -1,7 +1,7 @@
 // src/fetchAnnouncements.js
 
 // Strapi API base URL (adjust as needed)
-const STRAPI_API = "https://your-strapi-domain/api/announcements";
+const STRAPI_API = "http://localhost:1337/api/announcements";
 
 // Helper to build query string for sorting and filtering
 function buildQuery(sortOrder = "desc") {
