@@ -2,7 +2,6 @@
 
 const STRAPI_API = "http://localhost:1337/api/announcements";
 
-// Manually build the query string with proper format and booleans
 function buildQuery(sortOrder = "desc") {
   const now = new Date().toISOString();
 
@@ -16,7 +15,7 @@ function buildQuery(sortOrder = "desc") {
 
 export default async function fetchAnnouncements(sortOrder = "desc") {
   const url = `${STRAPI_API}?${buildQuery(sortOrder)}`;
-  console.log("Fetching announcements from:", url); // Log full URL
+  console.log("Fetching announcements from:", url);
 
   try {
     const res = await fetch(url);
@@ -29,12 +28,11 @@ export default async function fetchAnnouncements(sortOrder = "desc") {
 
     return (json.data ?? []).map(item => ({
       id: item.id,
-      title: item.attributes.Title,       // Title from Strapi
-      body: item.attributes.body,         // Rich text body
+      title: item.attributes.Title,
+      body: item.attributes.body,
       published: item.attributes.Published,
       expires: item.attributes.Expires
     }));
-
   } catch (e) {
     console.error("Error fetching announcements:", e);
     return [];
