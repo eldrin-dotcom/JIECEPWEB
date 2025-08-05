@@ -1,4 +1,3 @@
-// src/content.js
 import fetchAnnouncements from './fetchAnnouncements'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,15 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
          <small class="announcement-date text-muted">
             ${formatDate(item.publishedAt)}
          </small>
-
         </li>
       `
     }).join('')
   }
 
   renderAnnouncements('desc')
-
-
-
-console.log('👀 Fetching announcements from Sanity...')
 })

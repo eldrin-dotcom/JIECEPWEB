@@ -1,23 +1,35 @@
 // src/fetchAnnouncements.js
-import { client } from './sanityClient';
 
-// Add sortOrder parameter with a default value
-export default async function fetchAnnouncements(sortOrder = 'desc') {
-  // Determine the correct order string for GROQ
-  const orderString = sortOrder === 'asc' ? 'publishedAt asc' : 'publishedAt desc';
+// Strapi API base URL (adjust as needed)
+const STRAPI_API = "https://your-strapi-domain/api/announcements";
 
-  const query = `*[_type == "announcement" && (!defined(expiresAt) || expiresAt > now())] | order(${orderString}){
-    _id,
-    title,
-    body,
-    publishedAt
-  }`;
+// Helper to build query string for sorting and filtering
+function buildQuery(sortOrder = "desc") {
+  // Strapi v4: sort, filters, and populate params
+  const params = new URLSearchParams({
+    "sort[0]": `publishedAt:${sortOrder}`,
+    "filters[expiresAt][$null]": "true",         // expiresAt is null
+    "filters[expiresAt][$gt]": new Date().toISOString() // OR expiresAt > now
+  });
+  return params.toString();
+}
 
+export default async function fetchAnnouncements(sortOrder = "desc") {
+  const url = `${STRAPI_API}?${buildQuery(sortOrder)}`;
   try {
-    const data = await client.fetch(query);
-    return data;
-  } catch (error) {
-    console.error('Error fetching announcements:', error);
+    const res = await fetch(url);
+    const json = await res.json();
+    // Strapi v4 returns { data: [ ... ] }
+    // Map to match your frontend needs
+    return (json.data ?? []).map(item => ({
+      id: item.id,
+      title: item.attributes.title,
+      body: item.attributes.body,
+      publishedAt: item.attributes.publishedAt,
+      expiresAt: item.attributes.expiresAt
+    }));
+  } catch (e) {
+    console.error("Error fetching announcements:", e);
     return [];
   }
 }
