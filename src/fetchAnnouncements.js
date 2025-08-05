@@ -1,40 +1,54 @@
-// src/fetchAnnouncements.js
+// fetchAnnouncements.js
 
 const STRAPI_API = "http://localhost:1337/api/announcements";
 
+/**
+ * Build query string for announcements.
+ * - Sorts by Published field (custom field, not Strapi built-in)
+ * - Filters: Expires is null OR Expires > now
+ * - Populates body field (blocks)
+ * @param {"asc"|"desc"} sortOrder
+ * @returns {string}
+ */
 function buildQuery(sortOrder = "desc") {
-  const now = new Date().toISOString();
+  const nowISO = new Date().toISOString();
 
-  return [
-    `sort[0]=publishedAt:${sortOrder}`,
+  const params = [
+    `sort[0]=Published:${sortOrder}`,
     `filters[$or][0][Expires][$null]=true`,
-    `filters[$or][1][Expires][$gt]=${now}`,
+    `filters[$or][1][Expires][$gt]=${nowISO}`,
     `populate=body`
-  ].join("&");
+  ];
+
+  return params.join("&");
 }
 
+/**
+ * Fetches announcements from the Strapi API.
+ * @param {"asc"|"desc"} sortOrder
+ * @returns {Promise<Array>} Array of announcement objects
+ */
 export default async function fetchAnnouncements(sortOrder = "desc") {
   const url = `${STRAPI_API}?${buildQuery(sortOrder)}`;
   console.log("Fetching announcements from:", url);
 
   try {
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`Strapi API request failed with status: ${res.status}`);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch announcements. Status: ${response.status}`);
     }
+    const data = await response.json();
+    if (!data.data) return [];
 
-    const json = await res.json();
-
-    return (json.data ?? []).map(item => ({
+    return data.data.map((item) => ({
       id: item.id,
       title: item.attributes.Title,
       body: item.attributes.body,
       published: item.attributes.Published,
       expires: item.attributes.Expires
     }));
-  } catch (e) {
-    console.error("Error fetching announcements:", e);
+  } catch (err) {
+    console.error("Error fetching announcements:", err);
     return [];
   }
 }
