@@ -112,10 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   };
 
-  sortSelect.addEventListener('change', (e) => {
-    renderAnnouncements(e.target.value);
-  });
-
   // Initial render
   renderAnnouncements('desc');
 });
